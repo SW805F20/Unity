@@ -1,6 +1,6 @@
 name: Aquire activation file
 
-on: [push]
+on:
 
 jobs:
   activation:
