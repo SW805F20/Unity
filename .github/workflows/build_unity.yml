@@ -7,26 +7,15 @@ env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE}}
 
 jobs:
-  buildForSomePlatform:
-    name: Build for ${{ matrix.targetPlatform}} on version ${{matrix.unityVersion}}
+  build:
+    name: Build unity project
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        projectPath:
-          - TeamBuildingAR
-        unityVersion:
-          - 2019.3.0f1
-        targetPlatform:
-          - StandaloneWindows64
-          - StandaloneLinux64
-          - Android
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
           lfs: true
-      - uses: webbertakken/unity-builder@v0.11
+      - name: Run tests
+        uses: webbertakken/unity-test-runner@v1.3
         with:
-          projectPath: ${{ matrix.projectPath }}
-          unityVersion: ${{ matrix.unityVersion }}
-          targetPlatform: ${{ matrix.targetPlatform }}
+          unityVersion: 2019.2.11f1
