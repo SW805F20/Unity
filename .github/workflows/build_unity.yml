@@ -16,7 +16,7 @@ jobs:
         projectPath:
           - TeamBuildingAR
         unityVersion:
-          - 2019.2.11f1
+          - 2019.3.0f1
         targetPlatform:
           - StandaloneWindows64
           - StandaloneLinux64
