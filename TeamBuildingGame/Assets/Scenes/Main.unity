@@ -152,10 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44252b2043f9f5419b3faf7cef6d7d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  p1: {x: 0, y: 0, z: 0}
-  p2: {x: 0, y: 5, z: 0}
-  p3: {x: 5, y: 0, z: 0}
-  p4: {x: 5, y: 5, z: 0}
+  anchor1: {x: 0, y: 0, z: 0}
+  anchor2: {x: 0, y: 20, z: 0}
+  anchor3: {x: 20, y: 0, z: 0}
+  anchor4: {x: 20, y: 20, z: 0}
 --- !u!4 &89541187
 Transform:
   m_ObjectHideFlags: 0
