@@ -22,10 +22,6 @@ public class GoalZoneRenderer : MonoBehaviour
     public void MakeMeshData(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector4 anchor4)
     {
         mesh = GetComponent<MeshFilter>().mesh;
-        Debug.Log(anchor1);
-        Debug.Log(anchor2);
-        Debug.Log(anchor3);
-        Debug.Log(anchor4);
 
         // Define the four corners of the playing field, going in a clockwise direction.
         vertices = new Vector3[] { anchor1, anchor2, anchor3, anchor4 };

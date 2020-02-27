@@ -5,13 +5,6 @@ using UnityEngine;
 
 public class GoalZoneController : MonoBehaviour
 {
-    enum FieldShape
-    {
-        Rectangle,
-        Trapezoid,
-        Parallelogram,
-        Square
-    }
 
     Mesh mesh;
     Vector3 fieldAnchor1, fieldAnchor2, fieldAnchor3, fieldAnchor4;
@@ -21,8 +14,8 @@ public class GoalZoneController : MonoBehaviour
     float[] uniqueXSizes, uniqueYSizes;
     [SerializeField]
     GameObject playingField;
-    bool goalScored = false;
-    FieldShape fieldShape;
+    [SerializeField]
+    bool goalScored = false;    
     float goalZoneEdgeLength;
     Vector3[] vertices;
     int[] triangles;
@@ -31,6 +24,9 @@ public class GoalZoneController : MonoBehaviour
     float xDifference, yDifference;
     float goalZoneMiddleOffset;
     Transform goalHandler;
+    Vector2 centerOfField;
+    Vector2 centerOfBlueGoal;
+    Vector2 centerOfRedGoal;
 
     void Awake()
     {
@@ -59,11 +55,13 @@ public class GoalZoneController : MonoBehaviour
         minX = Mathf.Min(xSizeArray);
         minY = Mathf.Min(ySizeArray);
 
+        centerOfField = new Vector2(maxX / 2, maxY / 2);
+
         GetXAndYDifferences();
 
         CalculateGoalZoneSize();
 
-        CalculateShape();
+        //CalculateShape();
        
   
         SpawnFirstSetOfGoalZones();
@@ -75,24 +73,13 @@ public class GoalZoneController : MonoBehaviour
     {
         if(goalScored)
         {
-            switch (fieldShape)
-            {
-                case FieldShape.Rectangle:
-                    SpawnRandomZonesRectangle();
-                    break;
-                case FieldShape.Trapezoid:
-                    break;
-                case FieldShape.Parallelogram:
-                    break;
-                case FieldShape.Square:
-                    break;
-            }
+            GenerateNewGoalZones();
         }
 
 
     }
 
-    void CalculateShape()
+   /* void CalculateShape()
     {
         //If there are only two distinct values in the y array it means that it must be a rectangle.
         if(ySizeArray.Distinct().Count() == 2 && xSizeArray.Distinct().Count() == 2)
@@ -127,7 +114,7 @@ public class GoalZoneController : MonoBehaviour
             fieldShape = FieldShape.Square;
         }
 
-    }
+    }*/
 
     void GetXAndYDifferences()
     {
@@ -136,36 +123,6 @@ public class GoalZoneController : MonoBehaviour
     }
 
     void SpawnFirstSetOfGoalZones()
-    {
-        switch (fieldShape)
-        {
-            case FieldShape.Rectangle:
-                SpawnOppositeGoalsRectangle();
-                break;
-            case FieldShape.Trapezoid:
-                break;
-            case FieldShape.Parallelogram:
-                break;
-            case FieldShape.Square:
-                break;
-        }
-    }
-
-    void CalculateGoalZoneSize()
-    {
-        //Find the shortest edge and base size of a percentage of that
-        if (xDifference < yDifference)
-        {
-            goalZoneEdgeLength =  (20f / 100f) * xDifference;
-        }
-        else
-        {
-            goalZoneEdgeLength = (20f / 100f) * yDifference;
-        }
-        goalZoneMiddleOffset = goalZoneEdgeLength / 2f;
-    }
-
-    void SpawnOppositeGoalsRectangle()
     {
         // The sides to spawn goals are picked based on which edges are longer.
         if (yDifference > xDifference)
@@ -176,6 +133,9 @@ public class GoalZoneController : MonoBehaviour
             anchor3 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), maxY - goalZoneEdgeLength, 1f);
             anchor4 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), maxY, 1f);
 
+            centerOfBlueGoal = new Vector2((anchor1.x + anchor4.x) / 2, (anchor1.y + anchor4.y) / 2);
+            
+
             blueGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
 
             anchor1 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), minY, 1f);
@@ -184,6 +144,11 @@ public class GoalZoneController : MonoBehaviour
             anchor4 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), minY + goalZoneEdgeLength, 1f);
 
             redGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+
+            centerOfRedGoal = new Vector2((anchor1.x + anchor4.x) / 2, (anchor1.y + anchor4.y) / 2);
+
+            Debug.Log(centerOfBlueGoal);
+            Debug.Log(centerOfRedGoal);
         }
         else
         {
@@ -203,13 +168,89 @@ public class GoalZoneController : MonoBehaviour
             redGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
 
         }
-
     }
 
-    void SpawnRandomZonesRectangle()
+    void CalculateGoalZoneSize()
     {
+        //Find the shortest edge and base size of a percentage of that
+        if (xDifference < yDifference)
+        {
+            goalZoneEdgeLength =  (20f / 100f) * xDifference;
+        }
+        else
+        {
+            goalZoneEdgeLength = (20f / 100f) * yDifference;
+        }
+        goalZoneMiddleOffset = goalZoneEdgeLength / 2f;
+    }
+
+
+    void GenerateNewGoalZones()
+    {
+        Debug.Log("Hej");
+        float randomYBlue = 0;
+        float randomXBlue = 0;
+        Vector2 redMidPoint;
+        Vector2 blueMidPoint;
+        Vector3[] anchors;
+
+        if(xDifference < yDifference)
+        {
+            //VerticalField - if blue center is > then field center it means blue is on top and should be swapped
+            if (centerOfBlueGoal.y > centerOfField.y)
+            {
+                randomYBlue = Random.Range(minY + goalZoneMiddleOffset, centerOfField.y - goalZoneMiddleOffset);
+                randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
+                centerOfBlueGoal = new Vector2(randomXBlue, randomYBlue);
+                anchors = DefineAnchorsForGoal(centerOfBlueGoal);
+
+                blueGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
+                var xOffsetFromMiddle = randomXBlue - centerOfField.x;
+                var yOffsetFromMiddle = randomYBlue - centerOfField.y;
+
+                // Red needs to mirror so we use the offset for the blue goal.
+                centerOfRedGoal = new Vector2(centerOfField.x + xOffsetFromMiddle, centerOfField.y + yOffsetFromMiddle);
+                anchors = DefineAnchorsForGoal(centerOfBlueGoal);
+                redGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
+            }
+            else
+            {
+                randomYBlue = Random.Range(centerOfField.y + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
+                randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
+                centerOfBlueGoal = new Vector2(randomXBlue, randomYBlue);
+                var xOffsetFromMiddle = randomXBlue + centerOfField.x;
+                var yOffsetFromMiddle = randomYBlue + centerOfField.y;
+
+                // Red needs to mirror so we use the offset for the blue goal.
+                centerOfRedGoal = new Vector2(centerOfField.x - xOffsetFromMiddle, centerOfField.y - yOffsetFromMiddle);
+            }
+        }
+
+        /*
+        if(xDifference < yDifference)
+        {
+            //VerticalField - blue is top.
+            randomYBlue = Random.Range(centerOfField.y + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
+            randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
+            blueMidPoint = new Vector2(randomXBlue, randomYBlue);
+            var xOffsetFromMiddle = randomXBlue - centerOfField.x;
+            var yOffsetFromMiddle = randomYBlue - centerOfField.y;
+
+            //Since blue is top we can use the difference from the midpoint to its position to find a mirror position
+            redMidPoint = new Vector2(centerOfField.x - xOffsetFromMiddle, centerOfField.y - yOffsetFromMiddle);
+        }
+        else
+        {
+            //HorizontalField - Blue is left
+            randomYBlue = Random.Range(maxY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
+            randomXBlue = Random.Range(centerOfField.x - goalZoneMiddleOffset, maxX + goalZoneMiddleOffset);
+            blueMidPoint = new Vector2(randomXBlue, randomYBlue);
+        }*/
+
+       
         
-        if (yDifference > xDifference)
+
+        /*if (yDifference > xDifference)
         {
             float[] randoms = new float[2];
             randoms = RandomValuesForSpawnPoints(minY, maxY);
@@ -220,12 +261,12 @@ public class GoalZoneController : MonoBehaviour
             float[] randoms = new float[2];
             randoms = RandomValuesForSpawnPoints(minX, maxX);
             DefineAnchorsRandomRectangle(randoms);
-        }
+        }*/
        
 
     }
 
-    float[] RandomValuesForSpawnPoints(float min, float max)
+   /* float[] RandomValuesForSpawnPoints(float min, float max)
     {
         float[] randoms = new float[2];
         do
@@ -252,7 +293,19 @@ public class GoalZoneController : MonoBehaviour
 
             goalHandler.GetChild(i).GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
         }
-    }
+    }*/
 
+    Vector3[] DefineAnchorsForGoal(Vector2 midPointForGoal)
+    {
+        Vector3[] anchorArray = new Vector3[4];
+        anchorArray[0] = new Vector3(midPointForGoal.x - goalZoneMiddleOffset, midPointForGoal.y - goalZoneMiddleOffset, 1f);
+        anchorArray[1] = new Vector3(midPointForGoal.x - goalZoneMiddleOffset, midPointForGoal.y - goalZoneMiddleOffset, 1f);
+        anchorArray[2] = new Vector3(midPointForGoal.x - goalZoneMiddleOffset, midPointForGoal.y - goalZoneMiddleOffset, 1f);
+        anchorArray[3] = new Vector3(midPointForGoal.x - goalZoneMiddleOffset, midPointForGoal.y - goalZoneMiddleOffset, 1f);
+
+        return anchorArray;
+
+
+    }
 
 }

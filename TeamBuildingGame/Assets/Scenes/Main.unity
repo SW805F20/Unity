@@ -532,6 +532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playingField: {fileID: 89541185}
+  goalScored: 0
   blueGoal: {fileID: 86130020}
   redGoal: {fileID: 179972689}
 --- !u!1001 &2151501399476000630
