@@ -19,7 +19,6 @@ public class GoalZoneController : MonoBehaviour
 
     [SerializeField]
     bool goalScored = false;
-    bool goalMoved = false;
 
     float goalZoneEdgeLength;
     float xDifference, yDifference;
@@ -32,6 +31,9 @@ public class GoalZoneController : MonoBehaviour
     GoalZoneRenderer blueGoalMesh, redGoalMesh;
     Vector3 fieldAnchor1, fieldAnchor2, fieldAnchor3, fieldAnchor4;
 
+    /// <summary> This method uses Unity's awake method to define starting requirements.
+    ///    It gets the anchors from the playingField game object, and uses these to create arrays of their positions.
+    ///    Finally it gets the rendering components of the goalzone child game objects.</summary>
     void Awake()
     {
         fieldAnchor1 = playingField.GetComponent<FieldGenerator>().anchor1;
@@ -46,7 +48,8 @@ public class GoalZoneController : MonoBehaviour
         redGoalMesh = redGoal.GetComponent<GoalZoneRenderer>();
     }
 
-    // Start is called before the first frame update
+    /// <summary> This method uses Unity's start method to define maximum and minimum coordinate values.
+    ///    It then defines the center of the field, and calls the necessary methods to create the starting goalzones.</summary>
     void Start()
     {
         maxX = Mathf.Max(xSizeArray);
@@ -63,7 +66,8 @@ public class GoalZoneController : MonoBehaviour
         SpawnFirstSetOfGoalZones();
     }
 
-    // Update is called once per frame
+    /// <summary> This method uses Unity's update method to continually check for goals being scored.
+    ///    If a goal is scored it should make new goalzones and flip sides.</summary>
     void Update()
     {
         if (goalScored)
@@ -72,7 +76,8 @@ public class GoalZoneController : MonoBehaviour
         }
     }
 
-
+    /// <summary> This method defines the field shape based on the differences in maximum and minimum x and y values.
+    ///    If the difference in maximum and minimum x is smaller than the difference in y, it is a vertical field.</summary>
     void DefineFieldShape()
     {
         xDifference = maxX - minX;
@@ -88,6 +93,8 @@ public class GoalZoneController : MonoBehaviour
         }
     }
 
+    /// <summary> This method simply calls the corresponding method to create the initial goalzones
+    ///    based on whether or not the field is vertical or horizontal.</summary>
     void SpawnFirstSetOfGoalZones()
     {
         // The sides to spawn goals are picked based on which edges are longer.
@@ -102,6 +109,9 @@ public class GoalZoneController : MonoBehaviour
         }
     }
 
+    /// <summary> This method calculates the size of an edge of the goal zone, based on the shortest edge.
+    ///    The number being divided by 100 represents the percentage size of the goal zone edge.
+    ///    The offset needed when defining anchors based on the center of a zone is then defined as half the length of the edges.</summary>
     void CalculateGoalZoneSize()
     {
         //Find the shortest edge and base size of a percentage of that. The 20f defines 20%. 
@@ -117,88 +127,54 @@ public class GoalZoneController : MonoBehaviour
         goalZoneMiddleOffset = goalZoneEdgeLength / 2f;
     }
 
-
+    /// <summary> This method accounts for the different possibilities for new goal zones to create a range in which to
+    ///    random a number for the blue goal zone. Another method then uses the numbers generated from the proper range. </summary>
     void GenerateNewGoalZones()
     {
         float randomYBlue = 0;
         float randomXBlue = 0;
-        Vector3[] anchors;
-
-        if (!goalMoved)
+        if (fieldShape == FieldShape.Vertical)
         {
-            if (fieldShape == FieldShape.Vertical)
+            //VerticalField - if blue center is > then field center it means blue is on top. Random ranges are defined to ensure it swaps sides.
+            if (centerOfBlueGoal.y > centerOfField.y)
             {
-                //VerticalField - if blue center is > then field center it means blue is on top and should be swapped
-                if (centerOfBlueGoal.y > centerOfField.y)
-                {
-                    //Goal zone middle offset ensures the goal does not have anchors that cross the middle, goal zone edge length ensures goals spawn a bit away from the middle line, and not on top of it.
-                    randomYBlue = Random.Range(minY + goalZoneMiddleOffset, centerOfField.y - goalZoneMiddleOffset - goalZoneEdgeLength);
-                    randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
-                    centerOfBlueGoal = new Vector2(randomXBlue, randomYBlue);
-                    anchors = DefineAnchorsForGoal(centerOfBlueGoal);
+                //Goal zone middle offset ensures the goal does not have anchors that cross the middle, goal zone edge length ensures goals spawn a bit away from the middle line, and not on top of it.
+                randomYBlue = Random.Range(minY + goalZoneMiddleOffset, centerOfField.y - goalZoneMiddleOffset - goalZoneEdgeLength);
+                randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
+                SpawnMirroringGoals(randomXBlue, randomYBlue);
 
-                    blueGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-
-                    // Red needs to mirror so we use the offset for the blue goal.
-                    centerOfRedGoal = new Vector2(maxX - randomXBlue, maxY - randomYBlue);
-                    anchors = DefineAnchorsForGoal(centerOfRedGoal);
-                    redGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-
-                }
-                else
-                {
-                    randomYBlue = Random.Range(centerOfField.y + goalZoneMiddleOffset + goalZoneEdgeLength, maxY - goalZoneMiddleOffset);
-                    randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
-                    centerOfBlueGoal = new Vector2(randomXBlue, randomYBlue);
-                    anchors = DefineAnchorsForGoal(centerOfBlueGoal);
-                    blueGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-
-                    // Red needs to mirror so we use the offset for the blue goal.
-                    centerOfRedGoal = new Vector2(maxX - randomXBlue, maxY - randomYBlue);
-                    anchors = DefineAnchorsForGoal(centerOfRedGoal);
-                    redGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-                    goalMoved = true;
-                }
             }
             else
             {
-                // Horizontal field - if blue center is < x then blue is on the left
-                if (centerOfBlueGoal.x < centerOfField.x)
-                {
-                    randomXBlue = Random.Range(centerOfField.x + goalZoneMiddleOffset + goalZoneEdgeLength, maxX - goalZoneMiddleOffset);
-                    randomYBlue = Random.Range(minY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
-
-                    
-                    centerOfBlueGoal = new Vector2(blueX, blueY);
-                    anchors = DefineAnchorsForGoal(centerOfBlueGoal);
-
-                    blueGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-
-                    // Red needs to mirror so we use the offset for the blue goal.
-                    centerOfRedGoal = new Vector2(maxX - blueX, maxY - blueY);
-                    anchors = DefineAnchorsForGoal(centerOfRedGoal);
-                    redGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-
-
-                }
-                else
-                {
-                    randomXBlue = Random.Range(minX + goalZoneMiddleOffset, centerOfField.x - goalZoneMiddleOffset - goalZoneEdgeLength);
-                    randomYBlue = Random.Range(minY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
-                    centerOfBlueGoal = new Vector2(randomXBlue, randomYBlue);
-                    anchors = DefineAnchorsForGoal(centerOfBlueGoal);
-                    blueGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-
-                    // Red needs to mirror so we use the offset for the blue goal.
-                    centerOfRedGoal = new Vector2(maxX - randomXBlue, maxY - randomYBlue);
-                    anchors = DefineAnchorsForGoal(centerOfRedGoal);
-                    redGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
-                    goalMoved = true;
-                }
+                randomYBlue = Random.Range(centerOfField.y + goalZoneMiddleOffset + goalZoneEdgeLength, maxY - goalZoneMiddleOffset);
+                randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
+                SpawnMirroringGoals(randomXBlue, randomYBlue);
             }
         }
+        else
+        {
+            // Horizontal field - if blue center is < x then blue is on the left
+            if (centerOfBlueGoal.x < centerOfField.x)
+            {
+                randomXBlue = Random.Range(centerOfField.x + goalZoneMiddleOffset + goalZoneEdgeLength, maxX - goalZoneMiddleOffset);
+                randomYBlue = Random.Range(minY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
+                SpawnMirroringGoals(randomXBlue, randomYBlue);
+
+
+            }
+            else
+            {
+                randomXBlue = Random.Range(minX + goalZoneMiddleOffset, centerOfField.x - goalZoneMiddleOffset - goalZoneEdgeLength);
+                randomYBlue = Random.Range(minY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
+                SpawnMirroringGoals(randomXBlue, randomYBlue);
+            }
+        }
+
     }
 
+    /// <summary>This method defines the anchors of the goalzones through its center,
+    ///    by using the offset needed, which is half of the edge length of the goal zone.</summary>
+    /// <param name="midPointForGoal">The center of the goalzone from which to build anchors.</param>
     Vector3[] DefineAnchorsForGoal(Vector2 midPointForGoal)
     {
         Vector3[] anchorArray = new Vector3[4];
@@ -210,6 +186,26 @@ public class GoalZoneController : MonoBehaviour
         return anchorArray;
     }
 
+    /// <summary>This method defines the center of the goalzones, calls another function to define the anchors,
+    ///    then invokes the method on the child mesh that renders both zones.</summary>
+    /// <param name="blueX">The x-coordinate for the random midpoint for the blue goal.</param>
+    /// <param name="blueY">The y-coordinate for the random midpoint for the blue goal.</param>
+    void SpawnMirroringGoals(float blueX, float blueY)
+    {
+        Vector3[] anchors;
+        centerOfBlueGoal = new Vector2(blueX, blueY);
+        anchors = DefineAnchorsForGoal(centerOfBlueGoal);
+
+        blueGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
+
+        // Red needs to mirror so we use the offset from the blue goal.
+        centerOfRedGoal = new Vector2(maxX - blueX, maxY - blueY);
+        anchors = DefineAnchorsForGoal(centerOfRedGoal);
+        redGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
+    }
+
+    /// <summary>This method defines the anchors for the starting goalzones on a vertical field,
+    ///    then invokes the method on the child mesh that renders it.</summary>
     void SpawnVerticalGoals()
     {
         Vector3 anchor1, anchor2, anchor3, anchor4;
@@ -220,18 +216,20 @@ public class GoalZoneController : MonoBehaviour
 
         centerOfBlueGoal = new Vector2((anchor1.x + anchor4.x) / 2, (anchor1.y + anchor4.y) / 2);
 
-        blueGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+        blueGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
 
         anchor1 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), minY, 1f);
         anchor2 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), minY + goalZoneEdgeLength, 1f);
         anchor3 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), minY, 1f);
         anchor4 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), minY + goalZoneEdgeLength, 1f);
 
-        redGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+        redGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
 
         centerOfRedGoal = new Vector2((anchor1.x + anchor4.x) / 2, (anchor1.y + anchor4.y) / 2);
     }
 
+    /// <summary>This method defines the anchors for the starting goalzones on a horizontal field,
+    ///    then invokes the method on the child mesh that renders it.</summary>
     void SpawnHorizontalGoals()
     {
         Vector3 anchor1, anchor2, anchor3, anchor4;
@@ -240,18 +238,13 @@ public class GoalZoneController : MonoBehaviour
         anchor3 = new Vector3(minX + goalZoneEdgeLength, (maxY / 2f) - goalZoneMiddleOffset, 1f);
         anchor4 = new Vector3(minX + goalZoneEdgeLength, (maxY / 2f) + goalZoneMiddleOffset, 1f);
 
-        blueGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+        blueGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
 
         anchor1 = new Vector3(maxX - goalZoneEdgeLength, (maxY / 2f) - goalZoneMiddleOffset, 1f);
         anchor2 = new Vector3(maxX - goalZoneEdgeLength, (maxY / 2f) + goalZoneMiddleOffset, 1f);
         anchor3 = new Vector3(maxX, (maxY / 2f) - goalZoneMiddleOffset, 1f);
         anchor4 = new Vector3(maxX, (maxY / 2f) + goalZoneMiddleOffset, 1f);
 
-        redGoal.GetComponent<GoalZoneRenderer>().MakeMeshData(anchor1, anchor2, anchor3, anchor4);
-    }
-
-    void SpawnMirroringGoals(float blueX, float blueY)
-    {
-
+        redGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
     }
 }
