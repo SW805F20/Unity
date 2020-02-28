@@ -497,7 +497,7 @@ GameObject:
   - component: {fileID: 1509549707}
   - component: {fileID: 1509549708}
   m_Layer: 0
-  m_Name: GoalZoneHandler
+  m_Name: GoalZoneController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
