@@ -8,8 +8,8 @@ public class FieldGenerator : MonoBehaviour
     int[] triangles;
     public Vector3 anchor1, anchor2, anchor3, anchor4;
     public bool fieldCreated = false;
-    [SerializeField]
-    private GameObject goalZoneHandler;
+
+    public GameObject goalZoneHandler;
 
     void Awake(){
         mesh = GetComponent<MeshFilter>().mesh;

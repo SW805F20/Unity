@@ -14,15 +14,13 @@ public class GoalZoneController : MonoBehaviour
     float[] xSizeArray, ySizeArray;
     float maxX, maxY, minX, minY;
 
-    [SerializeField]
-    GameObject playingField;
+    public GameObject playingField;
+
+    float goalZoneEdgeLength, goalZoneMiddleOffset;
+    float xDifference, yDifference;
 
     [SerializeField]
     bool goalScored = false;
-
-    float goalZoneEdgeLength;
-    float xDifference, yDifference;
-    float goalZoneMiddleOffset;
 
     public GameObject blueGoal, redGoal;
 
