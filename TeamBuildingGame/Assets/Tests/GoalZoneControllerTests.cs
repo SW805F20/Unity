@@ -15,6 +15,7 @@ namespace Tests
         private GameObject goalZoneController;
         private GameObject blueGoal;
         private GameObject redGoal;
+        private Vector3 anchor1, anchor2, anchor3, anchor4;
 
         [SetUp]
         public void SetUp()
