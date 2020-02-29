@@ -4,11 +4,32 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEditor;
 
 namespace Tests
 {
+
     public class GoalZoneControllerTests
     {
+        private GameObject playingField;
+        private GameObject goalZoneController;
+        private GameObject blueGoal;
+        private GameObject redGoal;
+
+        [SetUp]
+        public void SetUp()
+        {
+            SceneManager.LoadScene(0);
+            playingField = GameObject.FindGameObjectWithTag("PlayingField");
+            
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Object.Destroy(goalZoneController.gameObject);
+        }
+
         // A Test behaves as an ordinary method
         [Test]
         public void GoalZoneControllerTestsSimplePasses()
@@ -21,27 +42,18 @@ namespace Tests
         [UnityTest]
         public IEnumerator GoalZoneControllerHasTwoZonesPasses()
         {
-            SceneManager.LoadScene(0);
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
+            goalZoneController = GameObject.Find("GoalZoneController");
+            Assert.AreEqual(goalZoneController.transform.childCount, 2);
             yield return null;
 
-            var goalZoneController = GameObject.Find("GoalZoneController");
-
-            Assert.AreEqual(goalZoneController.transform.childCount, 2);
         }
 
         [UnityTest]
         public IEnumerator GoalZoneControllerHasTwoZonesFails()
         {
-            SceneManager.LoadScene(0);
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
-            yield return null;
-
-            var goalZoneController = GameObject.Find("GoalZoneController");
-
+            goalZoneController = GameObject.Find("GoalZoneController");
             Assert.AreNotEqual(goalZoneController.transform.childCount, 0);
+            yield return null;
         }
     }
 }
