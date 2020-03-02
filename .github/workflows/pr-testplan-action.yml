@@ -1,0 +1,15 @@
+on: pull_request
+
+jobs:
+  test_plan_comment_pr:
+    runs-on: ubuntu-lates
+    name: An example job to comment a PR
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@master
+        with:
+          message: 'For reviewers: check if the pr follows the testplan https://docs.google.com/document/d/1sL6BVXYbDczIXVd3Xx2QLMYn3e3Ft4zQhiHg4bF8n_A/edit?usp=sharing'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
