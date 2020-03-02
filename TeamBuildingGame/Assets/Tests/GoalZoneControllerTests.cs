@@ -56,5 +56,13 @@ namespace Tests
             Assert.AreNotEqual(goalZoneController.transform.childCount, 0);
             yield return null;
         }
+
+        [UnityTest]
+        public IEnumerator GoalZoneControllerSpawnsBlueGoalVertical()
+        {
+            goalZoneController = GameObject.Find("GoalZoneController");
+            Assert.AreNotEqual(goalZoneController.transform.childCount, 0);
+            yield return null;
+        }
     }
 }

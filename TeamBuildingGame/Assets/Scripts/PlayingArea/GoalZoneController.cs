@@ -12,11 +12,11 @@ public class GoalZoneController : MonoBehaviour
     }
 
     float[] xSizeArray, ySizeArray;
-    float maxX, maxY, minX, minY;
+    public float maxX, maxY, minX, minY;
 
     public GameObject playingField;
 
-    float goalZoneEdgeLength, goalZoneMiddleOffset;
+    public float goalZoneEdgeLength, goalZoneMiddleOffset;
     float xDifference, yDifference;
 
     [SerializeField]
@@ -24,10 +24,10 @@ public class GoalZoneController : MonoBehaviour
 
     public GameObject blueGoal, redGoal;
 
-    Vector2 centerOfField, centerOfBlueGoal, centerOfRedGoal;
+    public Vector2 centerOfField, centerOfBlueGoal, centerOfRedGoal;
     FieldShape fieldShape;
     GoalZoneRenderer blueGoalMesh, redGoalMesh;
-    Vector3 fieldAnchor1, fieldAnchor2, fieldAnchor3, fieldAnchor4;
+    public Vector3 fieldAnchor1, fieldAnchor2, fieldAnchor3, fieldAnchor4;
 
     /// <summary> This method uses Unity's awake method to define starting requirements.
     ///    It gets the anchors from the playingField game object, and uses these to create arrays of their positions.
@@ -173,7 +173,7 @@ public class GoalZoneController : MonoBehaviour
     /// <summary>This method defines the anchors of the goalzones through its center,
     ///    by using the offset needed, which is half of the edge length of the goal zone.</summary>
     /// <param name="midPointForGoal">The center of the goalzone from which to build anchors.</param>
-    Vector3[] DefineAnchorsForGoal(Vector2 midPointForGoal)
+    public Vector3[] DefineAnchorsForGoal(Vector2 midPointForGoal)
     {
         Vector3[] anchorArray = new Vector3[4];
         anchorArray[0] = new Vector3(midPointForGoal.x - goalZoneMiddleOffset, midPointForGoal.y - goalZoneMiddleOffset, 1f);
@@ -188,7 +188,7 @@ public class GoalZoneController : MonoBehaviour
     ///    then invokes the method on the child mesh that renders both zones.</summary>
     /// <param name="blueX">The x-coordinate for the random midpoint for the blue goal.</param>
     /// <param name="blueY">The y-coordinate for the random midpoint for the blue goal.</param>
-    void SpawnMirroringGoals(float blueX, float blueY)
+    public void SpawnMirroringGoals(float blueX, float blueY)
     {
         Vector3[] anchors;
         centerOfBlueGoal = new Vector2(blueX, blueY);
@@ -204,7 +204,7 @@ public class GoalZoneController : MonoBehaviour
 
     /// <summary>This method defines the anchors for the starting goalzones on a vertical field,
     ///    then invokes the method on the child mesh that renders it.</summary>
-    void SpawnVerticalGoals()
+    public void SpawnVerticalGoals()
     {
         Vector3 anchor1, anchor2, anchor3, anchor4;
         anchor1 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), maxY - goalZoneEdgeLength, 1f);
@@ -228,7 +228,7 @@ public class GoalZoneController : MonoBehaviour
 
     /// <summary>This method defines the anchors for the starting goalzones on a horizontal field,
     ///    then invokes the method on the child mesh that renders it.</summary>
-    void SpawnHorizontalGoals()
+    public void SpawnHorizontalGoals()
     {
         Vector3 anchor1, anchor2, anchor3, anchor4;
         anchor1 = new Vector3(minX, (maxY / 2f) - goalZoneMiddleOffset, 1f);
