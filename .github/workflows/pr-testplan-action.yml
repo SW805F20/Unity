@@ -2,7 +2,7 @@ on: pull_request
 
 jobs:
   test_plan_comment_pr:
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
     name: An example job to comment a PR
     steps:
       - name: Checkout
