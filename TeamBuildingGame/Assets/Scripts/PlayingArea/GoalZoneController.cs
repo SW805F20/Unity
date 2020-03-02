@@ -12,11 +12,14 @@ public class GoalZoneController : MonoBehaviour
     }
 
     float[] xSizeArray, ySizeArray;
-    public float maxX, maxY, minX, minY;
+
+    [HideInInspector]
+    public float maxX, maxY, minX, minY, goalZoneEdgeLength, goalZoneMiddleOffset;
+    public float goalLengthPercentage;
 
     public GameObject playingField;
 
-    public float goalZoneEdgeLength, goalZoneMiddleOffset;
+    
     float xDifference, yDifference;
 
     [SerializeField]
@@ -24,9 +27,14 @@ public class GoalZoneController : MonoBehaviour
 
     public GameObject blueGoal, redGoal;
 
+    [HideInInspector]
     public Vector2 centerOfField, centerOfBlueGoal, centerOfRedGoal;
+
     FieldShape fieldShape;
-    GoalZoneRenderer blueGoalMesh, redGoalMesh;
+
+    public GoalZoneRenderer blueGoalMesh, redGoalMesh;
+
+    [HideInInspector]
     public Vector3 fieldAnchor1, fieldAnchor2, fieldAnchor3, fieldAnchor4;
 
     /// <summary> This method uses Unity's awake method to define starting requirements.
@@ -103,7 +111,6 @@ public class GoalZoneController : MonoBehaviour
         else
         {
             SpawnHorizontalGoals();
-
         }
     }
 
@@ -112,14 +119,14 @@ public class GoalZoneController : MonoBehaviour
     ///    The offset needed when defining anchors based on the center of a zone is then defined as half the length of the edges.</summary>
     void CalculateGoalZoneSize()
     {
-        //Find the shortest edge and base size of a percentage of that. The 20f defines 20%. 
+        //Find the shortest edge and base size of a percentage of that. Goal zone percentage defines how large the edge should be based on a percentage. 
         if (fieldShape == FieldShape.Vertical)
         {
-            goalZoneEdgeLength = (20f / 100f) * xDifference;
+            goalZoneEdgeLength = (goalLengthPercentage / 100f) * xDifference;
         }
         else
         {
-            goalZoneEdgeLength = (20f / 100f) * yDifference;
+            goalZoneEdgeLength = (goalLengthPercentage / 100f) * yDifference;
         }
 
         goalZoneMiddleOffset = goalZoneEdgeLength / 2f;
@@ -157,8 +164,6 @@ public class GoalZoneController : MonoBehaviour
                 randomXBlue = Random.Range(centerOfField.x + goalZoneMiddleOffset + goalZoneEdgeLength, maxX - goalZoneMiddleOffset);
                 randomYBlue = Random.Range(minY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
                 SpawnMirroringGoals(randomXBlue, randomYBlue);
-
-
             }
             else
             {
@@ -188,7 +193,7 @@ public class GoalZoneController : MonoBehaviour
     ///    then invokes the method on the child mesh that renders both zones.</summary>
     /// <param name="blueX">The x-coordinate for the random midpoint for the blue goal.</param>
     /// <param name="blueY">The y-coordinate for the random midpoint for the blue goal.</param>
-    public void SpawnMirroringGoals(float blueX, float blueY)
+    void SpawnMirroringGoals(float blueX, float blueY)
     {
         Vector3[] anchors;
         centerOfBlueGoal = new Vector2(blueX, blueY);
@@ -206,43 +211,72 @@ public class GoalZoneController : MonoBehaviour
     ///    then invokes the method on the child mesh that renders it.</summary>
     public void SpawnVerticalGoals()
     {
-        Vector3 anchor1, anchor2, anchor3, anchor4;
-        anchor1 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), maxY - goalZoneEdgeLength, 1f);
-        anchor2 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), maxY, 1f);
-        anchor3 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), maxY - goalZoneEdgeLength, 1f);
-        anchor4 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), maxY, 1f);
+        Vector3[] anchors = new Vector3[4];
+        anchors = DefineVerticalBlueGoal();
+        
+        blueGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
 
-        centerOfBlueGoal = new Vector2((anchor1.x + anchor4.x) / 2, (anchor1.y + anchor4.y) / 2);
+        anchors = DefineVerticalRedGoal();
+        redGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
+    }
 
-        blueGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+    /// <summary>This method defines the anchors for the starting goalzone on the top half of the vertical field.</summary>
+    public Vector3[] DefineVerticalBlueGoal()
+    {
+        Vector3[] anchors = new Vector3[4];
+        anchors[0] = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), maxY - goalZoneEdgeLength, 1f);
+        anchors[1] = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), maxY, 1f);
+        anchors[2] = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), maxY - goalZoneEdgeLength, 1f);
+        anchors[3] = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), maxY, 1f);
 
-        anchor1 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), minY, 1f);
-        anchor2 = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), minY + goalZoneEdgeLength, 1f);
-        anchor3 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), minY, 1f);
-        anchor4 = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), minY + goalZoneEdgeLength, 1f);
+        return anchors;
+    }
 
-        redGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+    /// <summary>This method defines the anchors for the starting goalzone on the bottom half of the vertical field.</summary>
+    public Vector3[] DefineVerticalRedGoal()
+    {
+        Vector3[] anchors = new Vector3[4];
+        anchors[0] = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), minY, 1f);
+        anchors[1] = new Vector3(((maxX / 2f) - goalZoneMiddleOffset), minY + goalZoneEdgeLength, 1f);
+        anchors[2] = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), minY, 1f);
+        anchors[3] = new Vector3(((maxX / 2f) + goalZoneMiddleOffset), minY + goalZoneEdgeLength, 1f);
 
-        centerOfRedGoal = new Vector2((anchor1.x + anchor4.x) / 2, (anchor1.y + anchor4.y) / 2);
+        return anchors;
     }
 
     /// <summary>This method defines the anchors for the starting goalzones on a horizontal field,
     ///    then invokes the method on the child mesh that renders it.</summary>
     public void SpawnHorizontalGoals()
     {
-        Vector3 anchor1, anchor2, anchor3, anchor4;
-        anchor1 = new Vector3(minX, (maxY / 2f) - goalZoneMiddleOffset, 1f);
-        anchor2 = new Vector3(minX, (maxY / 2f) + goalZoneMiddleOffset, 1f);
-        anchor3 = new Vector3(minX + goalZoneEdgeLength, (maxY / 2f) - goalZoneMiddleOffset, 1f);
-        anchor4 = new Vector3(minX + goalZoneEdgeLength, (maxY / 2f) + goalZoneMiddleOffset, 1f);
+        Vector3[] anchors = new Vector3[4];
+        anchors = DefineHorizontalBlueGoal();
+        blueGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
 
-        blueGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+        anchors = DefineHorizontalRedGoal();
+        redGoalMesh.MakeMeshData(anchors[0], anchors[1], anchors[2], anchors[3]);
+    }
 
-        anchor1 = new Vector3(maxX - goalZoneEdgeLength, (maxY / 2f) - goalZoneMiddleOffset, 1f);
-        anchor2 = new Vector3(maxX - goalZoneEdgeLength, (maxY / 2f) + goalZoneMiddleOffset, 1f);
-        anchor3 = new Vector3(maxX, (maxY / 2f) - goalZoneMiddleOffset, 1f);
-        anchor4 = new Vector3(maxX, (maxY / 2f) + goalZoneMiddleOffset, 1f);
+    /// <summary>This method defines the anchors for the starting goalzone on the left half of the horizontal field.</summary>
+    public Vector3[] DefineHorizontalBlueGoal()
+    {
+        Vector3[] anchors = new Vector3[4];
+        anchors[0] = new Vector3(minX, (maxY / 2f) - goalZoneMiddleOffset, 1f);
+        anchors[1] = new Vector3(minX, (maxY / 2f) + goalZoneMiddleOffset, 1f);
+        anchors[2] = new Vector3(minX + goalZoneEdgeLength, (maxY / 2f) - goalZoneMiddleOffset, 1f);
+        anchors[3] = new Vector3(minX + goalZoneEdgeLength, (maxY / 2f) + goalZoneMiddleOffset, 1f);
 
-        redGoalMesh.MakeMeshData(anchor1, anchor2, anchor3, anchor4);
+        return anchors;
+    }
+
+    /// <summary>This method defines the anchors for the starting goalzone on the right half of the horizontal field.</summary>
+    public Vector3[] DefineHorizontalRedGoal()
+    {
+        Vector3[] anchors = new Vector3[4];
+        anchors[0] = new Vector3(maxX - goalZoneEdgeLength, (maxY / 2f) - goalZoneMiddleOffset, 1f);
+        anchors[1] = new Vector3(maxX - goalZoneEdgeLength, (maxY / 2f) + goalZoneMiddleOffset, 1f);
+        anchors[2] = new Vector3(maxX, (maxY / 2f) - goalZoneMiddleOffset, 1f);
+        anchors[3] = new Vector3(maxX, (maxY / 2f) + goalZoneMiddleOffset, 1f);
+
+        return anchors;
     }
 }
