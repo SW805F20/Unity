@@ -8,6 +8,6 @@ jobs:
       - uses: tzkhan/pr-update-action@v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          branch-regez: 'd+'
+          branch-regez: '*'
           body-template: 'Reviwers should check if pr follows [test plan](https://docs.google.com/document/d/1sL6BVXYbDczIXVd3Xx2QLMYn3e3Ft4zQhiHg4bF8n_A/edit?usp=sharing)'
           body-prefix-newline-count: 2
