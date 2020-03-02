@@ -11,5 +11,5 @@ jobs:
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@master
         with:
-          message: 'For reviewers: check if the pr follows the testplan https://docs.google.com/document/d/1sL6BVXYbDczIXVd3Xx2QLMYn3e3Ft4zQhiHg4bF8n_A/edit?usp=sharing'
+          message: '# For reviewers: \n Check if the pr follows the testplan https://docs.google.com/document/d/1sL6BVXYbDczIXVd3Xx2QLMYn3e3Ft4zQhiHg4bF8n_A/edit?usp=sharing'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
