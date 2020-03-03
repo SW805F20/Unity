@@ -68,6 +68,8 @@ namespace Tests
             goalZoneController.maxY = 10f;
             goalZoneController.minX = 0f;
             goalZoneController.minY = 0f;
+            goalZoneController.xDifference = 20f;
+            goalZoneController.yDifference = 10f;
         }
 
         [UnityTest]
