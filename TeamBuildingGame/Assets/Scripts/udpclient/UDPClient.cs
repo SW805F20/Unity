@@ -8,20 +8,16 @@ using System;
 public class UDPClient : MonoBehaviour
 {
     UdpClient uClient;
-    Socket uSocket;
+    string ipAddress = "224.3.29.71";
+    int portNumber = 10000;
 
     void Awake()
     {
-        uClient = new UdpClient(10000);
+        //Establiehs a udp connection on the port.
+        uClient = new UdpClient(portNumber);
 
-        uSocket = uClient.Client;
-
-        
-        uSocket.SetSocketOption(SocketOptionLevel.Socket,
-                      SocketOptionName.Broadcast, 1);
-
-
-        uClient.JoinMulticastGroup(IPAddress.Parse("224.3.29.71"));
+        //Adds the client to a multicastgroup based on the given ip address
+        uClient.JoinMulticastGroup(IPAddress.Parse(ipAddress));
     }
 
     // Start is called before the first frame update
@@ -30,22 +26,19 @@ public class UDPClient : MonoBehaviour
         StartListening();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void OnDestroy()
     {
+        //Ensures connection is closed when the game object it is attached to is destroyed, so it wont continue to receive messages after the game ends.
         uClient.Close();
     }
 
+    /// <summary> Starts receiving from the remote host. Uses an asynchronous callback delegate the invokes the recv function.
+    ///    the null is an object representing the state.</summary>
     public void StartListening()
     {
         try
         {
-            uClient.BeginReceive(new AsyncCallback(recv), null);
+            uClient.BeginReceive(new AsyncCallback(Receive), null);
         }
         catch (Exception e)
         {
@@ -53,16 +46,21 @@ public class UDPClient : MonoBehaviour
         }
     }
 
-    public void recv(IAsyncResult res)
+    /// <summary> Receives the datagram. 
+    /// <param name="res">The result associated with the callback - the data.</param>
+    public void Receive(IAsyncResult res)
     {
+        //Represents a network endpoint as IP address and port number.
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
         try
         {
-
-            // Blocks until a message returns on this socket from a remote host.
+            // Receives the message as an array of bytes, then ends communication with the remote endpoint.
             Byte[] receiveBytes = uClient.EndReceive(res, ref RemoteIpEndPoint);
-            uClient.BeginReceive(new AsyncCallback(recv), null);
 
+            //Restarts communication again to receive a new datagram.
+            uClient.BeginReceive(new AsyncCallback(Receive), null);
+
+            //The bytes that were received are converted to a string, which is written to the unity debug log.
             string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
 
             Debug.Log("This is the message you received " +
@@ -71,14 +69,10 @@ public class UDPClient : MonoBehaviour
                                         RemoteIpEndPoint.Address.ToString() +
                                         " on their port number " +
                                         RemoteIpEndPoint.Port.ToString());
-
-
         }
         catch (Exception e)
         {
             Debug.Log(e.ToString());
         }
-
-        StartListening();
     }
 }
