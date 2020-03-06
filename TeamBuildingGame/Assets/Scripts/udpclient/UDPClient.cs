@@ -5,15 +5,18 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 
+/// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
 public class UDPClient : MonoBehaviour
 {
     UdpClient uClient;
     string ipAddress = "224.3.29.71";
     int portNumber = 10000;
+    string datagramMessage;
+    string datagramSender;
 
     void Awake()
     {
-        //Establiehs a udp connection on the port.
+        //Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
 
         //Adds the client to a multicastgroup based on the given ip address
@@ -33,7 +36,8 @@ public class UDPClient : MonoBehaviour
     }
 
     /// <summary> Starts receiving from the remote host. Uses an asynchronous callback delegate the invokes the recv function.
-    ///    the null is an object representing the state.</summary>
+    ///    Null is an object representing the state. The state is a user-defined object containing information about the receive operation.
+    ///    We do not need to pass any special information, which is why we pass null.</summary>
     public void StartListening()
     {
         try
@@ -51,7 +55,7 @@ public class UDPClient : MonoBehaviour
     public void Receive(IAsyncResult res)
     {
         //Represents a network endpoint as IP address and port number.
-        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
         try
         {
             // Receives the message as an array of bytes, then ends communication with the remote endpoint.
@@ -62,13 +66,8 @@ public class UDPClient : MonoBehaviour
 
             //The bytes that were received are converted to a string, which is written to the unity debug log.
             string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
-
-            Debug.Log("This is the message you received " +
-                                      returnData.ToString());
-            Debug.Log("This message was sent from " +
-                                        RemoteIpEndPoint.Address.ToString() +
-                                        " on their port number " +
-                                        RemoteIpEndPoint.Port.ToString());
+            datagramMessage = returnData;
+            datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
         }
         catch (Exception e)
         {
