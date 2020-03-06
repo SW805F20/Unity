@@ -38,13 +38,7 @@ public class UDPClient : MonoBehaviour
     ///    We do not need to pass any special information, which is why we pass null.</summary>
     public void StartListening()
     {
-        try
-        {
-            uClient.BeginReceive(new AsyncCallback(Receive), null);
-        }
-        catch (Exception)
-        {
-        }
+        uClient.BeginReceive(new AsyncCallback(Receive), null);
     }
 
     /// <summary> Receives the datagram. 
@@ -53,21 +47,17 @@ public class UDPClient : MonoBehaviour
     {
         //Represents a network endpoint as IP address and port number.
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
-        try
-        {
-            // Receives the message as an array of bytes, then ends communication with the remote endpoint.
-            Byte[] receiveBytes = uClient.EndReceive(res, ref RemoteIpEndPoint);
 
-            //Restarts communication again to receive a new datagram.
-            uClient.BeginReceive(new AsyncCallback(Receive), null);
+        // Receives the message as an array of bytes, then ends communication with the remote endpoint.
+        Byte[] receiveBytes = uClient.EndReceive(res, ref RemoteIpEndPoint);
 
-            //The bytes that were received are converted to a string, which is written to the unity debug log.
-            string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
-            datagramMessage = returnData;
-            datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
-        }
-        catch (Exception)
-        {
-        }
+        //Restarts communication again to receive a new datagram.
+        uClient.BeginReceive(new AsyncCallback(Receive), null);
+
+        //The bytes that were received are converted to a string, which is written to the unity debug log.
+        string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
+        datagramMessage = returnData;
+        datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
+        Debug.Log(datagramMessage);
     }
 }
