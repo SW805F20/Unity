@@ -14,10 +14,10 @@ public class UDPClient : MonoBehaviour
 
     void Awake()
     {
-        //Establishes a udp connection on the port.
+        // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
 
-        //Adds the client to a multicastgroup based on the given ip address
+        // Adds the client to a multicastgroup based on the given ip address
         uClient.JoinMulticastGroup(IPAddress.Parse(ipAddress));
     }
 
@@ -29,7 +29,7 @@ public class UDPClient : MonoBehaviour
 
     void OnDestroy()
     {
-        //Ensures connection is closed when the game object it is attached to is destroyed, so it wont continue to receive messages after the game ends.
+        // Ensures connection is closed when the game object it is attached to is destroyed, so it wont continue to receive messages after the game ends.
         uClient.Close();
     }
 
@@ -45,16 +45,16 @@ public class UDPClient : MonoBehaviour
     /// <param name="res">The result associated with the callback - the data.</param>
     public void Receive(IAsyncResult res)
     {
-        //Represents a network endpoint as IP address and port number.
+        // Represents a network endpoint as IP address and port number.
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
 
         // Receives the message as an array of bytes, then ends communication with the remote endpoint.
         Byte[] receiveBytes = uClient.EndReceive(res, ref RemoteIpEndPoint);
 
-        //Restarts communication again to receive a new datagram.
+        // Restarts communication again to receive a new datagram.
         uClient.BeginReceive(new AsyncCallback(Receive), null);
 
-        //The bytes that were received are converted to a string, which is written to the unity debug log.
+        // The bytes that were received are converted to a string, which is written to the unity debug log.
         string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
         datagramMessage = returnData;
         datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
