@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
@@ -44,9 +42,8 @@ public class UDPClient : MonoBehaviour
         {
             uClient.BeginReceive(new AsyncCallback(Receive), null);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Debug.Log(e.Message);
         }
     }
 
@@ -69,9 +66,8 @@ public class UDPClient : MonoBehaviour
             datagramMessage = returnData;
             datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Debug.Log(e.ToString());
         }
     }
 }
