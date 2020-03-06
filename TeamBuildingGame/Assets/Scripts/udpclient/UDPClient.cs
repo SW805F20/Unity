@@ -58,6 +58,5 @@ public class UDPClient : MonoBehaviour
         string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
         datagramMessage = returnData;
         datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
-        Debug.Log(datagramMessage);
     }
 }
