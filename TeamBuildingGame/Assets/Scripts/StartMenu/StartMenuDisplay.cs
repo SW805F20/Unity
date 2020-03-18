@@ -35,7 +35,7 @@ public class StartMenuDisplay : MonoBehaviour
         if(!String.IsNullOrEmpty(inputField.text))
         {
             inputField.gameObject.SetActive(false);
-            connectionText.text = "Connected to Host \"Host IP\" \n (1 of 4 players connected)";
+            connectionText.text = $"Connected to host with IP {inputField.text} \n (1 of 4 players connected)";
             playersConnected.SetActive(true);
         }
 
