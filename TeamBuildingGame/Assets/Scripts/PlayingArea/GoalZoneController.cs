@@ -5,16 +5,20 @@ using UnityEngine;
 
 public class GoalZoneController : MonoBehaviour
 {
+    // If the x-axis has a higher maximum value than the y-axis, it means the horizontal edges of the field are longer, and this it is a horizontal playingfield.
     enum FieldShape
     {
         Vertical,
         Horizontal
     }
 
+    // Arrays for all sizes on both a and y axis, used to fid maximum and minimum values
     float[] xSizeArray, ySizeArray;
 
+    // x and y differences are the difference between the maximum and minimum values. Goalzone edge length is how long each edge is. The middle offset is the distance between the midpoint and an edge.
     [HideInInspector]
     public float maxX, maxY, minX, minY, xDifference, yDifference, goalZoneEdgeLength, goalZoneMiddleOffset;
+    // The percentage size of the edges of a goal. The percentage is based on the shortest edge.
     public float goalLengthPercentage;
 
     public GameObject playingField;
@@ -75,6 +79,7 @@ public class GoalZoneController : MonoBehaviour
     {
         if (goalScored)
         {
+            goalScored = false;
             GenerateNewGoalZones();
         }
     }
@@ -143,14 +148,11 @@ public class GoalZoneController : MonoBehaviour
                 //Goal zone middle offset ensures the goal does not have anchors that cross the middle, goal zone edge length ensures goals spawn a bit away from the middle line, and not on top of it.
                 randomYBlue = Random.Range(minY + goalZoneMiddleOffset, centerOfField.y - goalZoneMiddleOffset - goalZoneEdgeLength);
                 randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
-                SpawnMirroringGoals(randomXBlue, randomYBlue);
-
             }
             else
             {
                 randomYBlue = Random.Range(centerOfField.y + goalZoneMiddleOffset + goalZoneEdgeLength, maxY - goalZoneMiddleOffset);
                 randomXBlue = Random.Range(minX + goalZoneMiddleOffset, maxX - goalZoneMiddleOffset);
-                SpawnMirroringGoals(randomXBlue, randomYBlue);
             }
         }
         else
@@ -160,16 +162,15 @@ public class GoalZoneController : MonoBehaviour
             {
                 randomXBlue = Random.Range(centerOfField.x + goalZoneMiddleOffset + goalZoneEdgeLength, maxX - goalZoneMiddleOffset);
                 randomYBlue = Random.Range(minY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
-                SpawnMirroringGoals(randomXBlue, randomYBlue);
             }
             else
             {
                 randomXBlue = Random.Range(minX + goalZoneMiddleOffset, centerOfField.x - goalZoneMiddleOffset - goalZoneEdgeLength);
                 randomYBlue = Random.Range(minY + goalZoneMiddleOffset, maxY - goalZoneMiddleOffset);
-                SpawnMirroringGoals(randomXBlue, randomYBlue);
             }
         }
 
+        SpawnMirroringGoals(randomXBlue, randomYBlue);
     }
 
     /// <summary>This method defines the anchors of the goalzones through its center,
