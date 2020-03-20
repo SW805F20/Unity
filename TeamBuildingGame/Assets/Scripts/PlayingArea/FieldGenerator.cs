@@ -7,6 +7,9 @@ public class FieldGenerator : MonoBehaviour
     Vector3[] vertices;
     int[] triangles;
     public Vector3 anchor1, anchor2, anchor3, anchor4;
+    public bool fieldCreated = false;
+
+    public GameObject goalZoneHandler;
 
     void Awake(){
         mesh = GetComponent<MeshFilter>().mesh;
@@ -16,6 +19,14 @@ public class FieldGenerator : MonoBehaviour
     void Start(){
         MakeMeshData();
         CreateMesh();
+    }
+
+    private void Update()
+    {
+        if (fieldCreated)
+        {
+            goalZoneHandler.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -37,5 +48,6 @@ public class FieldGenerator : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        fieldCreated = true;
     }
 }
