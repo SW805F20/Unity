@@ -12,7 +12,7 @@ public class DisableTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SwitchTo2D());
+        XRDevice.DisableAutoXRCameraTracking(this.GetComponent<Camera>(), true);
     }
 
     // Update is called once per frame
@@ -34,40 +34,5 @@ public class DisableTracking : MonoBehaviour
                 this.GetComponent<Camera>().orthographicSize = yMax / 2f * sizeDifference;
             }
         }
-    }
-
-    // Call via `StartCoroutine(SwitchTo2D())` from your code. Or, use
-    // `yield SwitchTo2D()` if calling from inside another coroutine.
-    IEnumerator SwitchTo2D()
-    {
-        // Empty string loads the "None" device.
-        XRSettings.LoadDeviceByName("");
-
-        // Must wait one frame after calling `XRSettings.LoadDeviceByName()`.
-        yield return null;
-
-        ResetCameras();
-    }
-
-    void ResetCameras()
-    {
-        // Camera looping logic copied from GvrEditorEmulator.cs
-        for (int i = 0; i < Camera.allCameras.Length; i++)
-        {
-            Camera cam = Camera.allCameras[i];
-            if (cam.enabled && cam.stereoTargetEye != StereoTargetEyeMask.None)
-            {
-
-                // Reset local position.
-                // Only required if you change the camera's local position while in 2D mode.
-                cam.transform.localPosition = Vector3.zero;
-
-                // Reset local rotation.
-                // Only required if you change the camera's local rotation while in 2D mode.
-                cam.transform.localRotation = Quaternion.identity;
-            }
-        }
-
-        cameraReset = true;
     }
 }
