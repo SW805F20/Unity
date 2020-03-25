@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System;
+using System.Collections.Generic;
 
 /// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
 public class UDPClient : MonoBehaviour
@@ -12,8 +13,13 @@ public class UDPClient : MonoBehaviour
     string datagramMessage;
     string datagramSender;
 
+    public int playerCount;
+    public Vector2[] playerPositions;
+
     void Awake()
     {
+        playerPositions = new Vector2[playerCount];
+
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
 
