@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 public class FieldGenerator : MonoBehaviour
@@ -17,7 +15,7 @@ public class FieldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start(){
         MakeMeshData();
-        CreateMesh();       
+        CreateMesh();
     }
 
     /// <summary>
