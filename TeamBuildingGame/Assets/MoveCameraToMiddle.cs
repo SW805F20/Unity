@@ -9,7 +9,7 @@ public class MoveCameraToMiddle : MonoBehaviour
     private List<float> xAnchors = new List<float>();
     private List<float> yAnchors = new List<float>();
     public float xMax, yMax;
-    private float xMiddle, yMiddle;
+    public float xMiddle, yMiddle;
 
     // Start is called before the first frame update
     void Start()

@@ -9,6 +9,12 @@ public class FieldGenerator : MonoBehaviour
     Vector3[] vertices;
     int[] triangles;
     public Vector3 anchor1, anchor2, anchor3, anchor4;
+    public Camera mainCamera;
+    public GameObject cameraRig;
+    private Transform cameraTransform;
+    GvrControllerInputDevice ControllerInputDevice;
+    public Quaternion orientation;
+    public GvrControllerInput gvrControllerMain;
 
     void Awake(){
         mesh = GetComponent<MeshFilter>().mesh;
@@ -40,4 +46,34 @@ public class FieldGenerator : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
     }
+
+    void Update()
+    {
+        /*
+        float x = mainCamera.transform.position.x;
+        var y = mainCamera.transform.position.y;
+        var z = mainCamera.transform.position.z * 10;
+        Quaternion orientation = Gvr.GvrControllerInput.Orientation;
+        orien = GvrControllerInputDevice.Orientation;
+        Vector3 forward = GvrVRHelpers.GetHeadForward();
+        forward.z = forward.z + 10;
+        transform.position = forward;*/
+        /* Vector3 position = mainCamera.transform.localPosition;
+
+         position.z = position.z = -10;
+         transform.localPosition = position;
+         transform.localRotation = mainCamera.transform.localRotation;*/
+
+        /*Vector3 resultingPosition = mainCamera.transform.position + mainCamera.transform.forward * 10;
+        transform.position = new Vector3(resultingPosition.x, resultingPosition.y, resultingPosition.z);
+        transform.rotation = mainCamera.transform.localRotation;*/
+        Debug.Log(mainCamera.transform.forward);
+
+
+        Vector3 resultingPosition = mainCamera.transform.position + mainCamera.transform.forward;
+        transform.position = new Vector3(resultingPosition.x, resultingPosition.y, resultingPosition.z);
+        transform.rotation = mainCamera.transform.localRotation;
+
+
+    } 
 }
