@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Linq;
 using System;
+using TMPro;
 public class StartMenuDisplay : MonoBehaviour
 {
     GameObject display;
