@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System;
-using TMPro;
+
 public class StartMenuDisplay : MonoBehaviour
 {
     public Text connectionText;
