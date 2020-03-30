@@ -2,21 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Linq;
 using System;
+
 public class StartMenuDisplay : MonoBehaviour
 {
-    GameObject display;
-    TMP_InputField inputField;
-    GameObject playersConnected;
-    TMP_Text connectionText;
-    public void Awake()
+    public Text connectionText;
+    public InputField inputField;
+    public GameObject playersConnected;
+    public GameObject display;
+
+    public void Start()
     {
-        display = GameObject.Find("Display");
-        inputField = display.GetComponentInChildren<TMP_InputField>();
-        playersConnected = GameObject.Find("PlayersConnected");
-        connectionText = playersConnected.GetComponentInChildren<TMP_Text>();
         playersConnected.SetActive(false);
 
     }
