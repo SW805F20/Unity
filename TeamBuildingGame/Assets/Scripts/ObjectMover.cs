@@ -8,7 +8,9 @@ public class ObjectMover : MonoBehaviour
     UDPClient clientData;
 
     [SerializeField]
-    GameObject playerPrefab;
+    GameObject rhinoPrefab;
+    [SerializeField]
+    GameObject birdPrefab;
     GameObject[] players;
 
     public Material blueColor;
@@ -24,14 +26,13 @@ public class ObjectMover : MonoBehaviour
         players = new GameObject[clientData.playerCount];
         for (int i = 0; i < clientData.playerCount; i++)
         {
-            players[i] = Instantiate(playerPrefab);
             if (i < clientData.playerCount / 2)
             {
-                players[i].GetComponent<MeshRenderer>().material = blueColor;
+                players[i] = Instantiate(birdPrefab);
             }
             else
             {
-                players[i].GetComponent<MeshRenderer>().material = redColor;
+                players[i] = Instantiate(rhinoPrefab);
             }
         }
     }
@@ -41,7 +42,7 @@ public class ObjectMover : MonoBehaviour
     {
         for (int i = 0; i < clientData.playerCount; i++)
         {
-            players[i].transform.position = clientData.playerPositions[i];
+            //players[i].transform.position = clientData.playerPositions[i];
         }
     }
 }

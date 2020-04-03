@@ -452,8 +452,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 1721110669}
-  blueColor: {fileID: 2100000, guid: afa3be642af12e24c965aebea9bb4374, type: 2}
-  redColor: {fileID: 2100000, guid: cbec1b9e310ef394dadf2112887b4085, type: 2}
+  blueColor: {fileID: 2100000, guid: 9b3d95fdd7c002a47a36198fbca872b5, type: 2}
+  redColor: {fileID: 2100000, guid: 360d9da7d5656534b95d67e87e2df442, type: 2}
 --- !u!1 &684829590
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,7 +517,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: afa3be642af12e24c965aebea9bb4374, type: 2}
+  - {fileID: 2100000, guid: 9b3d95fdd7c002a47a36198fbca872b5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -908,7 +908,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cbec1b9e310ef394dadf2112887b4085, type: 2}
+  - {fileID: 2100000, guid: 360d9da7d5656534b95d67e87e2df442, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
