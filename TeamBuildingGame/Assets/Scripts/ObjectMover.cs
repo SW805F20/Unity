@@ -13,10 +13,6 @@ public class ObjectMover : MonoBehaviour
     GameObject birdPrefab;
     GameObject[] players;
 
-    public Material blueColor;
-    public Material redColor;
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +38,7 @@ public class ObjectMover : MonoBehaviour
     {
         for (int i = 0; i < clientData.playerCount; i++)
         {
-            //players[i].transform.position = clientData.playerPositions[i];
+            players[i].transform.position = clientData.playerPositions[i];
         }
     }
 }
