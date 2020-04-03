@@ -52,6 +52,10 @@ public class FieldGenerator : MonoBehaviour
         fieldCreated = true;
     }
 
+    /// <summary>
+    /// UVs are defined as the base texture coordinates for a mesh. If they are not explicitly defined, the mesh cannot render a picture.
+    /// Instead, it will just render a single color. So the coordinates are defined as the anchors for the playing field, as that is how big the mesh is.
+    /// </summary>
     void DefineUVs()
     {
         // This is necessary to make a mesh display an actual texture, otherwise it just displays a single color.
