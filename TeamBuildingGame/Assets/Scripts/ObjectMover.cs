@@ -8,7 +8,9 @@ public class ObjectMover : MonoBehaviour
     UDPClient clientData;
 
     [SerializeField]
-    GameObject playerPrefab;
+    GameObject rhinoPrefab;
+    [SerializeField]
+    GameObject birdPrefab;
     GameObject[] players;
 
     // Start is called before the first frame update
@@ -20,7 +22,14 @@ public class ObjectMover : MonoBehaviour
         players = new GameObject[clientData.playerCount];
         for (int i = 0; i < clientData.playerCount; i++)
         {
-            players[i] = Instantiate(playerPrefab);
+            if (i < clientData.playerCount / 2)
+            {
+                players[i] = Instantiate(birdPrefab);
+            }
+            else
+            {
+                players[i] = Instantiate(rhinoPrefab);
+            }
         }
     }
 

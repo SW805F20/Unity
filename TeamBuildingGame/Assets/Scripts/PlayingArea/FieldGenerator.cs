@@ -19,6 +19,7 @@ public class FieldGenerator : MonoBehaviour
     void Start(){
         MakeMeshData();
         CreateMesh();
+        DefineUVs();
     }
 
     private void Update()
@@ -49,5 +50,21 @@ public class FieldGenerator : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         fieldCreated = true;
+    }
+
+    /// <summary>
+    /// UVs are defined as the base texture coordinates for a mesh. If they are not explicitly defined, the mesh cannot render a picture.
+    /// Instead, it will just render a single color. So the coordinates are defined as the anchors for the playing field, as that is how big the mesh is.
+    /// </summary>
+    void DefineUVs()
+    {
+        // This is necessary to make a mesh display an actual texture, otherwise it just displays a single color.
+        Vector2 corner1 = new Vector2(anchor1.x, anchor1.y);
+        Vector2 corner2 = new Vector2(anchor2.x, anchor2.y);
+        Vector2 corner3 = new Vector2(anchor3.x, anchor3.y);
+        Vector2 corner4 = new Vector2(anchor4.x, anchor4.y);
+        Vector2[] uvs = new Vector2[4] { corner1, corner2, corner3, corner4};
+
+        mesh.uv = uvs;
     }
 }
