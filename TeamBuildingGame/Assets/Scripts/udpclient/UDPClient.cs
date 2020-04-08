@@ -15,10 +15,12 @@ public class UDPClient : MonoBehaviour
 
     public int playerCount;
     public Vector2[] playerPositions;
+    public Vector2 ballPosition;
 
     void Awake()
     {
         playerPositions = new Vector2[playerCount];
+        ballPosition = new Vector2();
 
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
@@ -42,14 +44,14 @@ public class UDPClient : MonoBehaviour
     /// <summary> Starts receiving from the remote host. Uses an asynchronous callback delegate the invokes the recv function.
     ///    Null is an object representing the state. The state is a user-defined object containing information about the receive operation.
     ///    We do not need to pass any special information, which is why we pass null.</summary>
-    public void StartListening()
+    private void StartListening()
     {
         uClient.BeginReceive(new AsyncCallback(Receive), null);
     }
 
     /// <summary> Receives the datagram. 
     /// <param name="res">The result associated with the callback - the data.</param>
-    public void Receive(IAsyncResult res)
+    private void Receive(IAsyncResult res)
     {
         // Represents a network endpoint as IP address and port number.
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
@@ -64,5 +66,50 @@ public class UDPClient : MonoBehaviour
         string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
         datagramMessage = returnData;
         datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
+
+        // Saves position of players in array of vector 2d
+        GetNetworkDataType(datagramMessage);
+    }
+    private void GetNetworkDataType(string datagramMessage)
+    {
+        datagramMessage = datagramMessage.Remove(0, 2);
+        long data;
+        byte type;
+        if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
+        {
+            type = (byte)data;
+            switch (type)
+            {
+                case 1:
+                    SavePlayerData(data);
+                    break;
+                default:
+                    Debug.LogError("Data format incorrect: Type not recognized");
+                    break;
+            }
+        }
+        else
+        {
+            Debug.LogError("Network data could not be parsed");
+        }
+
+    }
+    private void SavePlayerData(long data)
+    {
+        byte id = (byte)(data >> 16);
+        ushort x = (ushort)(data >> 24);
+        ushort y = (ushort)(data >> 40);
+
+        if(id == 0)
+        {
+            ballPosition.x = x;
+            ballPosition.y = y;
+        }
+        else
+        {
+            id--; // Use id to enter correct index of player array which is 0 indexed. The lowest player id is 1.
+            playerPositions[id].x = x;
+            playerPositions[id].y = y;
+        }
     }
 }
