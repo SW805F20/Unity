@@ -22,6 +22,7 @@ public class ObjectMover : MonoBehaviour
         client = GameObject.Find("CLIENT");
         clientData = client.GetComponent<UDPClient>();
 
+        ball = Instantiate(ballPrefab);
         players = new GameObject[clientData.playerCount];
         for (int i = 0; i < clientData.playerCount; i++)
         {
