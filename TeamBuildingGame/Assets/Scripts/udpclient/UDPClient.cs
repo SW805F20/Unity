@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
 public class UDPClient : MonoBehaviour
@@ -13,10 +14,14 @@ public class UDPClient : MonoBehaviour
     private string datagramMessage;
     private string datagramSender;
     private byte playerPacketTimestamp;
+    private List<int> anchorsReceived;
 
     public int playerCount;
+    public int anchorCount = 4;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
+    public Vector2[] anchorPositions;
+
 
     
 
@@ -24,6 +29,8 @@ public class UDPClient : MonoBehaviour
     {
         playerPositions = new Vector2[playerCount];
         ballPosition = new Vector2();
+        anchorPositions = new Vector2[anchorCount];
+        anchorsReceived = new List<int>();
 
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
@@ -85,6 +92,7 @@ public class UDPClient : MonoBehaviour
     {
             // Remove 0x from string before parsing
         datagramMessage = datagramMessage.Remove(0, 2);
+        Debug.Log(datagramMessage);
         long data;
         byte type;
         if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
@@ -92,8 +100,17 @@ public class UDPClient : MonoBehaviour
             type = (byte)data;
             switch (type)
             {
+                case 0:
+                    Debug.Log("Anchor");
+                    HandleAnchorData(data);
+                    break;
                 case 1:
+                    Debug.Log("Player");
                     UpdatePlayerData(data);
+                    break;
+                case 5:
+                    Debug.Log("Checksum");
+                    HandleCheckSum(data);
                     break;
             }
         }
@@ -101,6 +118,54 @@ public class UDPClient : MonoBehaviour
         {
             Debug.LogError("Network data could not be parsed");
         }
+    }
+
+    private void HandleCheckSum(long data)
+    {
+        ushort serverCheckSum = (ushort)(data >> 20);
+
+        int localCheckSum = 0;
+
+        for(int i = 0; i < anchorCount; i++)
+        {
+            localCheckSum += (int)anchorPositions[i].x + (int)anchorPositions[i].y;
+        }
+
+        if(localCheckSum == serverCheckSum)
+        {
+            SendAcknowledgment(true);
+        } else
+        {
+            SendAcknowledgment(false);
+        }
+
+        
+    }
+
+    private void HandleAnchorData(long data)
+    {
+        byte id = (byte)(data >> 8);
+        ushort x = (ushort)(data >> 16);
+        ushort y = (ushort)(data >> 32);
+
+        if(!anchorsReceived.Contains(id))
+        {
+            anchorsReceived.Add(id);
+        }
+
+        anchorPositions[id].x = x;
+        anchorPositions[id].y = y;
+
+        if(anchorsReceived.Count == anchorCount)
+        {
+            // We have received all anchor positions
+        }
+    }
+
+    private void SendAcknowledgment(bool isPositive)
+    {
+        var message = StringToByteArray(FormatAckString(isPositive));
+        uClient.BeginSend(message, message.Length, "224.3.29.71", 10000, null, null);
     }
 
     /// <summary>
@@ -161,5 +226,32 @@ public class UDPClient : MonoBehaviour
 
         playerPacketTimestamp = time;
         return result;
+    }
+
+
+    private string FormatAckString(bool isPositive)
+    {
+        int package;
+        int value = 0;
+
+        if (isPositive)
+        {
+            value = 1;
+        }
+
+        package = value;
+        package = package << 4;
+        package = package | 6;
+
+        return package.ToString("X");
+    }
+
+    // This is a nice copy paste
+    private static byte[] StringToByteArray(string hex)
+    {
+        return Enumerable.Range(0, hex.Length)
+                         .Where(x => x % 2 == 0)
+                         .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                         .ToArray();
     }
 }
