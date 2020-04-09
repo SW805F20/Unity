@@ -7,15 +7,18 @@ using System.Collections.Generic;
 /// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
 public class UDPClient : MonoBehaviour
 {
-    UdpClient uClient;
-    string ipAddress = "224.3.29.71";
-    int portNumber = 10000;
-    string datagramMessage;
-    string datagramSender;
+    private UdpClient uClient;
+    private string ipAddress = "224.3.29.71";
+    private int portNumber = 10000;
+    private string datagramMessage;
+    private string datagramSender;
+    private byte playerPacketTimestamp;
 
     public int playerCount;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
+
+    
 
     void Awake()
     {
@@ -27,6 +30,8 @@ public class UDPClient : MonoBehaviour
 
         // Adds the client to a multicastgroup based on the given ip address
         uClient.JoinMulticastGroup(IPAddress.Parse(ipAddress));
+
+        playerPacketTimestamp = 0;
     }
 
     // Start is called before the first frame update
@@ -68,10 +73,17 @@ public class UDPClient : MonoBehaviour
         datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
 
         // Saves position of players in array of vector 2d
-        GetNetworkDataType(datagramMessage);
+        DatagramHandler(datagramMessage);
     }
-    private void GetNetworkDataType(string datagramMessage)
+
+    /// <summary> 
+    ///  Gets the datagram message and decodes it to find the type of message.
+    ///  Depending on the type it calls the appropiate method to handle the message.
+    /// </summary>
+    /// <param name="datagramMessage">The hex message send from the game server</param>
+    private void DatagramHandler(string datagramMessage)
     {
+            // Remove 0x from string before parsing
         datagramMessage = datagramMessage.Remove(0, 2);
         long data;
         byte type;
@@ -81,10 +93,7 @@ public class UDPClient : MonoBehaviour
             switch (type)
             {
                 case 1:
-                    SavePlayerData(data);
-                    break;
-                default:
-                    Debug.LogError("Data format incorrect: Type not recognized");
+                    UpdatePlayerData(data);
                     break;
             }
         }
@@ -92,24 +101,65 @@ public class UDPClient : MonoBehaviour
         {
             Debug.LogError("Network data could not be parsed");
         }
-
     }
-    private void SavePlayerData(long data)
+
+    /// <summary>
+    /// Updates the player and ball position.
+    /// Also calls subfunction that checks the timestamp to make sure old data does not get used.
+    /// </summary>
+    /// <param name="data">The datagram message in hex with the 0x removed</param>
+    private void UpdatePlayerData(long data)
     {
+            // bitshifting the hex string and typecasting to byte to get the values.
+            // see network format in the report for more detail
+        byte time = (byte)(data >> 8);
         byte id = (byte)(data >> 16);
         ushort x = (ushort)(data >> 24);
         ushort y = (ushort)(data >> 40);
 
-        if(id == 0)
+
+        if (CheckTimestamp(time))
         {
-            ballPosition.x = x;
-            ballPosition.y = y;
+            if (id == 0)
+            {
+                ballPosition.x = x;
+                ballPosition.y = y;
+            }
+            else
+            {
+                // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
+                id--;
+                playerPositions[id].x = x;
+                playerPositions[id].y = y;
+            }
+        }
+        
+    }
+
+    /// <summary>
+    /// Uses the timestamp from the incoming message to check against the last timestamp from a playerpacket to make sure old data is not being used.
+    /// </summary>
+    /// <param name="time">the timestamp from the incoming message</param>
+    /// <returns></returns>
+    private bool CheckTimestamp(byte time)
+    {
+        bool result;
+        // Should be reworked, breaks if the timestamps from 235 to 255 fails
+        if (time < playerPacketTimestamp)
+        {
+            result = false;
+        }
+        else if( time <= 20 
+                 && playerPacketTimestamp >= 235)
+        {
+            result = true;
         }
         else
         {
-            id--; // Use id to enter correct index of player array which is 0 indexed. The lowest player id is 1.
-            playerPositions[id].x = x;
-            playerPositions[id].y = y;
+            result = true;
         }
+
+        playerPacketTimestamp = time;
+        return result;
     }
 }
