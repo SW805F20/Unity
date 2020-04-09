@@ -8,9 +8,12 @@ public class ObjectMover : MonoBehaviour
     UDPClient clientData;
 
     [SerializeField]
-    GameObject rhinoPrefab;
+    GameObject team1Prefab;
     [SerializeField]
-    GameObject birdPrefab;
+    GameObject team2Prefab;
+    [SerializeField]
+    GameObject ballPrefab;
+    GameObject ball;
     GameObject[] players;
 
     // Start is called before the first frame update
@@ -19,16 +22,17 @@ public class ObjectMover : MonoBehaviour
         client = GameObject.Find("CLIENT");
         clientData = client.GetComponent<UDPClient>();
 
+        ball = Instantiate(ballPrefab);
         players = new GameObject[clientData.playerCount];
         for (int i = 0; i < clientData.playerCount; i++)
         {
             if (i < clientData.playerCount / 2)
             {
-                players[i] = Instantiate(birdPrefab);
+                players[i] = Instantiate(team1Prefab);
             }
             else
             {
-                players[i] = Instantiate(rhinoPrefab);
+                players[i] = Instantiate(team2Prefab);
             }
         }
     }
@@ -36,6 +40,7 @@ public class ObjectMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ball.transform.position = clientData.ballPosition;
         for (int i = 0; i < clientData.playerCount; i++)
         {
             players[i].transform.position = clientData.playerPositions[i];
