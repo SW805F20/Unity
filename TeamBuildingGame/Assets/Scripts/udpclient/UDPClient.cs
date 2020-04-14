@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 /// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
 public class UDPClient : MonoBehaviour
@@ -15,15 +16,13 @@ public class UDPClient : MonoBehaviour
     private string datagramSender;
     private byte playerPacketTimestamp;
     private List<int> anchorsReceived;
+    private bool messageSent;
 
     public int playerCount;
     public int anchorCount = 4;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
     public Vector2[] anchorPositions;
-
-
-    
 
     void Awake()
     {
@@ -75,7 +74,7 @@ public class UDPClient : MonoBehaviour
         uClient.BeginReceive(new AsyncCallback(Receive), null);
 
         // The bytes that were received are converted to a string, which is written to the unity debug log.
-        string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
+        string returnData = Encoding.ASCII.GetString(receiveBytes);
         datagramMessage = returnData;
         datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
 
@@ -90,26 +89,27 @@ public class UDPClient : MonoBehaviour
     /// <param name="datagramMessage">The hex message send from the game server</param>
     private void DatagramHandler(string datagramMessage)
     {
-            // Remove 0x from string before parsing
-        datagramMessage = datagramMessage.Remove(0, 2);
-        Debug.Log(datagramMessage);
+        // Remove 0x from string before parsing
+        if(datagramMessage.ToLower().StartsWith("0x"))
+        {
+            datagramMessage = datagramMessage.Remove(0, 2);
+        }
+
         long data;
         byte type;
         if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
         {
             type = (byte)data;
+            Debug.Log(type);
             switch (type)
             {
                 case 0:
-                    Debug.Log("Anchor");
                     HandleAnchorData(data);
                     break;
                 case 1:
-                    Debug.Log("Player");
                     UpdatePlayerData(data);
                     break;
                 case 5:
-                    Debug.Log("Checksum");
                     HandleCheckSum(data);
                     break;
             }
@@ -134,8 +134,7 @@ public class UDPClient : MonoBehaviour
         if(localCheckSum == serverCheckSum)
         {
             SendAcknowledgment(true);
-        } else
-        {
+        } else {
             SendAcknowledgment(false);
         }
 
@@ -147,26 +146,27 @@ public class UDPClient : MonoBehaviour
         byte id = (byte)(data >> 8);
         ushort x = (ushort)(data >> 16);
         ushort y = (ushort)(data >> 32);
-
-        if(!anchorsReceived.Contains(id))
-        {
-            anchorsReceived.Add(id);
-        }
-
+        // Debug.LogError(id + ": " + x + " " + y + " ");
         anchorPositions[id].x = x;
         anchorPositions[id].y = y;
 
-        if(anchorsReceived.Count == anchorCount)
-        {
-            // We have received all anchor positions
-        }
     }
 
     private void SendAcknowledgment(bool isPositive)
     {
-        var message = StringToByteArray(FormatAckString(isPositive));
-        uClient.BeginSend(message, message.Length, "224.3.29.71", 10000, null, null);
+        IPEndPoint ipEndpoint = new IPEndPoint(IPAddress.Parse(ipAddress), portNumber);
+        var message = Encoding.ASCII.GetBytes(FormatAckString(isPositive));
+        uClient.Send(message, message.Length, ipEndpoint);
     }
+
+    private void SendTo(IAsyncResult ar)
+    {
+        UdpClient u = (UdpClient)ar.AsyncState;
+
+        Debug.Log($"number of bytes sent: {u.EndSend(ar)}");
+        messageSent = true;
+    }
+
 
     /// <summary>
     /// Updates the player and ball position.
@@ -175,8 +175,8 @@ public class UDPClient : MonoBehaviour
     /// <param name="data">The datagram message in hex with the 0x removed</param>
     private void UpdatePlayerData(long data)
     {
-            // bitshifting the hex string and typecasting to byte to get the values.
-            // see network format in the report for more detail
+        // bitshifting the hex string and typecasting to byte to get the values.
+        // see network format in the report for more detail
         byte time = (byte)(data >> 8);
         byte id = (byte)(data >> 16);
         ushort x = (ushort)(data >> 24);
@@ -232,7 +232,7 @@ public class UDPClient : MonoBehaviour
     private string FormatAckString(bool isPositive)
     {
         int package;
-        int value = 0;
+        int value = 2;
 
         if (isPositive)
         {
@@ -241,17 +241,8 @@ public class UDPClient : MonoBehaviour
 
         package = value;
         package = package << 4;
-        package = package | 6;
+        package = package | 7;
 
         return package.ToString("X");
-    }
-
-    // This is a nice copy paste
-    private static byte[] StringToByteArray(string hex)
-    {
-        return Enumerable.Range(0, hex.Length)
-                         .Where(x => x % 2 == 0)
-                         .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                         .ToArray();
     }
 }
