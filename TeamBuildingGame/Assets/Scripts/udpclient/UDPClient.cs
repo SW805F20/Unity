@@ -15,8 +15,10 @@ public class UDPClient : MonoBehaviour
     private byte playerPacketTimestamp;
 
     public int playerCount;
+    public int teamCount = 2;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
+    
 
     
 
@@ -95,6 +97,7 @@ public class UDPClient : MonoBehaviour
                 case 1:
                     UpdatePlayerData(data);
                     break;
+
             }
         }
         else
