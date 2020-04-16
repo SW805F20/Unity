@@ -10,7 +10,7 @@ public class GoalZoneRenderer : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
