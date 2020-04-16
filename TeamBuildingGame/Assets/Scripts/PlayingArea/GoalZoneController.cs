@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GoalZoneController : MonoBehaviour
 {
-    float[] xSizeArray, ySizeArray; // Arrays for all sizes on both a and y axis, used to fid maximum and minimum values
+    float[] xSizeArray, ySizeArray; // Arrays for all sizes on both x and y axis, used to find maximum and minimum values
     float goalSizeOffset;
 
     public GameObject blueGoal, redGoal;
