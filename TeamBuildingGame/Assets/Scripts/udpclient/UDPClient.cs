@@ -15,23 +15,18 @@ public class UDPClient : MonoBehaviour
     private string datagramMessage;
     private string datagramSender;
     private byte playerPacketTimestamp;
-    private List<int> anchorsReceived;
-    private bool messageSent;
 
     public int playerCount;
-    public int anchorCount = 4;
     public int teamCount = 2;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
-    public Vector2[] anchorPositions;
     
 
     void Awake()
     {
         playerPositions = new Vector2[playerCount];
         ballPosition = new Vector2();
-        anchorPositions = new Vector2[anchorCount];
-        anchorsReceived = new List<int>();
+
 
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
@@ -102,17 +97,10 @@ public class UDPClient : MonoBehaviour
         if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
         {
             type = (byte)data;
-            Debug.Log(type);
             switch (type)
             {
-                case 0:
-                    HandleAnchorData(data);
-                    break;
                 case 1:
                     UpdatePlayerData(data);
-                    break;
-                case 5:
-                    HandleCheckSum(data);
                     break;
 
             }
@@ -122,54 +110,6 @@ public class UDPClient : MonoBehaviour
             Debug.LogError("Network data could not be parsed");
         }
     }
-
-    private void HandleCheckSum(long data)
-    {
-        ushort serverCheckSum = (ushort)(data >> 20);
-
-        int localCheckSum = 0;
-
-        for(int i = 0; i < anchorCount; i++)
-        {
-            localCheckSum += (int)anchorPositions[i].x + (int)anchorPositions[i].y;
-        }
-
-        if(localCheckSum == serverCheckSum)
-        {
-            SendAcknowledgment(true);
-        } else {
-            SendAcknowledgment(false);
-        }
-
-        
-    }
-
-    private void HandleAnchorData(long data)
-    {
-        byte id = (byte)(data >> 8);
-        ushort x = (ushort)(data >> 16);
-        ushort y = (ushort)(data >> 32);
-        // Debug.LogError(id + ": " + x + " " + y + " ");
-        anchorPositions[id].x = x;
-        anchorPositions[id].y = y;
-
-    }
-
-    private void SendAcknowledgment(bool isPositive)
-    {
-        IPEndPoint ipEndpoint = new IPEndPoint(IPAddress.Parse(ipAddress), portNumber);
-        var message = Encoding.ASCII.GetBytes(FormatAckString(isPositive));
-        uClient.Send(message, message.Length, ipEndpoint);
-    }
-
-    private void SendTo(IAsyncResult ar)
-    {
-        UdpClient u = (UdpClient)ar.AsyncState;
-
-        Debug.Log($"number of bytes sent: {u.EndSend(ar)}");
-        messageSent = true;
-    }
-
 
     /// <summary>
     /// Updates the player and ball position.
@@ -229,23 +169,5 @@ public class UDPClient : MonoBehaviour
 
         playerPacketTimestamp = time;
         return result;
-    }
-
-
-    private string FormatAckString(bool isPositive)
-    {
-        int package;
-        int value = 2;
-
-        if (isPositive)
-        {
-            value = 1;
-        }
-
-        package = value;
-        package = package << 4;
-        package = package | 7;
-
-        return package.ToString("X");
     }
 }
