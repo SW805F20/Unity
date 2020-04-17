@@ -402,6 +402,7 @@ GameObject:
   - component: {fileID: 651394925}
   - component: {fileID: 651394924}
   - component: {fileID: 651394926}
+  - component: {fileID: 651394927}
   m_Layer: 0
   m_Name: CLIENT
   m_TagString: Untagged
@@ -422,6 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCount: 4
+  teamCount: 2
   playerPositions:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
@@ -458,6 +460,19 @@ MonoBehaviour:
     type: 3}
   ballPrefab: {fileID: 3798980781739851276, guid: 278edf1dcc73ec14fb2b16442bcef33e,
     type: 3}
+--- !u!114 &651394927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 651394923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20192467f019fad44994e11e424cad64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playingfield: {fileID: 1114001383}
 --- !u!1 &684829590
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,6 +670,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e50d12f1261c4f344889c91536f6d0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blueGoal: {fileID: 684829590}
+  redGoal: {fileID: 1349755617}
+  goalLengthPercentage: 20
+  playingField: {fileID: 194931124}
+  blueGoalMesh: {fileID: 684829591}
+  redGoalMesh: {fileID: 1349755618}
   maxX: 0
   maxY: 0
   minX: 0
@@ -663,16 +684,10 @@ MonoBehaviour:
   yDifference: 0
   goalZoneEdgeLength: 0
   goalZoneMiddleOffset: 0
-  goalLengthPercentage: 20
-  playingField: {fileID: 194931124}
   goalScored: 0
-  blueGoal: {fileID: 684829590}
-  redGoal: {fileID: 1349755617}
   centerOfField: {x: 0, y: 0}
   centerOfBlueGoal: {x: 0, y: 0}
   centerOfRedGoal: {x: 0, y: 0}
-  blueGoalMesh: {fileID: 684829591}
-  redGoalMesh: {fileID: 1349755618}
   fieldAnchor1: {x: 0, y: 0, z: 0}
   fieldAnchor2: {x: 0, y: 0, z: 0}
   fieldAnchor3: {x: 0, y: 0, z: 0}

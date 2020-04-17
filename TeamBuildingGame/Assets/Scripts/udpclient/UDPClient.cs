@@ -20,9 +20,11 @@ public class UDPClient : MonoBehaviour
 
     public int playerCount;
     public int anchorCount = 4;
+    public int teamCount = 2;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
     public Vector2[] anchorPositions;
+    
 
     void Awake()
     {
@@ -112,6 +114,7 @@ public class UDPClient : MonoBehaviour
                 case 5:
                     HandleCheckSum(data);
                     break;
+
             }
         }
         else
