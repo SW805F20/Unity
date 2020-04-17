@@ -49,7 +49,7 @@ public class GoalZoneController : MonoBehaviour
     {
         var allSides = new float[] { fieldAnchor2.y - fieldAnchor1.y, fieldAnchor3.x - fieldAnchor2.x, fieldAnchor3.y - fieldAnchor4.y, fieldAnchor4.x - fieldAnchor1.x };
         float smallestSide = Mathf.Min(allSides);
-        goalSizeOffset = (smallestSide / 100 * goalLengthPercentage) / 2;
+        goalSizeOffset = (smallestSide / 100f * goalLengthPercentage) / 2f;
     }
 
     /// <summary> This method uses Unity's update method to continually check for goals being scored.
@@ -69,8 +69,8 @@ public class GoalZoneController : MonoBehaviour
         Vector3[] redCorners = CreateGoalCorners(redGoalCenter);
         Vector3[] blueCorners = CreateGoalCorners(blueGoalCenter);
 
-        redGoalMesh.MakeMeshData(redCorners[0], redCorners[1], redCorners[2], redCorners[3]);
-        blueGoalMesh.MakeMeshData(blueCorners[0], blueCorners[1], blueCorners[2], blueCorners[3]);
+        redGoalMesh.MakeMeshData(redCorners);
+        blueGoalMesh.MakeMeshData(blueCorners);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public class GoalZoneController : MonoBehaviour
     /// <returns></returns>
     private Vector3[] CreateGoalCorners(Vector2 goalCenter)
     {
-        float zAxisOffset = 1;
+        float zAxisOffset = 0;
         Vector3[] corners = new Vector3[4];
         // corners[0] is the lower left corner, they then proceed clockwise
         corners[0] = new Vector3(goalCenter.x - goalSizeOffset, goalCenter.y - goalSizeOffset, zAxisOffset);

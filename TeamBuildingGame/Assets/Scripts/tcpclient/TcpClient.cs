@@ -67,7 +67,6 @@ namespace sw8
         private void GoalPositionHandler(long data)
         {
             // Get data correctly and save in goalPositions
-
             goalZoneController.SpawnGoals(goalPositions[0], goalPositions[1]);
         }
 
