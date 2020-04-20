@@ -11,9 +11,11 @@ public class TCPClient : MonoBehaviour
     private string ipAddress = "127.0.0.1";
     private int portNumber = 10000;
     private Vector2[] goalPositions;
-    private GoalZoneController goalZoneController;
+    private GoalZoneController goalZoneControllerScript;
+    private FieldGenerator fieldGeneratorScript;
 
-    public GameObject playingfield;
+    public GameObject GoalZoneController;
+    public GameObject PlayingField;
 
 
 
@@ -21,14 +23,14 @@ public class TCPClient : MonoBehaviour
     {
         // Establishes a udp connection on the port.
         tcpClient = new TcpClient(ipAddress, portNumber);
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
         goalPositions = new Vector2[2];
-        goalZoneController = playingfield.GetComponent<GoalZoneController>();
+        goalZoneControllerScript = GoalZoneController.GetComponent<GoalZoneController>();
+        fieldGeneratorScript = PlayingField.GetComponent<FieldGenerator>();
 
         StartListening();
     }
@@ -60,17 +62,14 @@ public class TCPClient : MonoBehaviour
         }
         Debug.Log("Connected");
         
-
         NetworkStream stream = tcpClient.GetStream();
 
         byte[] data = new byte[256];
 
-        string responseData = string.Empty;
-
-
         int bytes = stream.Read(data, 0, data.Length);
-        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+        string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
         Debug.Log($"Received: {responseData}");
+        DatagramHandler(responseData);
 
         string message = "Received the anchor positions";
         data = System.Text.Encoding.ASCII.GetBytes(message);
@@ -92,25 +91,61 @@ public class TCPClient : MonoBehaviour
     private void DatagramHandler(string datagramMessage)
     {
         // Remove 0x from string before parsing
-        datagramMessage = datagramMessage.Remove(0, 2);
+        string[] hexStrings = datagramMessage.ToLower().Split(new string[] { "0x" }, StringSplitOptions.None);
         long data;
         byte type;
-        if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
-        {
-            type = (byte)data;
-            switch (type)
-            {
-                case 2:
-                    GoalPositionHandler(data);
-                    break;
 
+        for (int i = 1; i < hexStrings.Length; i++)
+        {
+            if (long.TryParse(hexStrings[i], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
+            {
+                type = (byte)data;
+                switch (type)
+                {
+                    case 0:
+                        AnchorPositionHandler(data, i);
+                        break;
+                    case 2:
+                        GoalPositionHandler(data);
+                        break;
+                }
+            }
+            else
+            {
+                Debug.LogError("Network data could not be parsed");
             }
         }
-        else
+
+    }
+
+    private void AnchorPositionHandler(long data, int anchorNumber)
+    {
+        byte id = (byte)(data >> 8);
+        ushort x = (ushort)(data >> 16);
+        ushort y = (ushort)(data >> 32);
+        switch(anchorNumber)
         {
-            Debug.LogError("Network data could not be parsed");
+            case 1:
+                fieldGeneratorScript.anchor1.x = x;
+                fieldGeneratorScript.anchor1.y = y;
+                break;
+            case 2:
+                fieldGeneratorScript.anchor2.x = x;
+                fieldGeneratorScript.anchor2.y = y;
+                break;
+            case 3:
+                fieldGeneratorScript.anchor3.x = x;
+                fieldGeneratorScript.anchor3.y = y;
+                break;
+            case 4:
+                fieldGeneratorScript.anchor4.x = x;
+                fieldGeneratorScript.anchor4.y = y;
+                // We have received all anchors and can render the playing field
+                fieldGeneratorScript.CreatePlayingField();
+                break;
         }
     }
+
     /// <summary>
     /// Updates the goals positions.
     /// </summary>
@@ -118,8 +153,7 @@ public class TCPClient : MonoBehaviour
     private void GoalPositionHandler(long data)
     {
         // Get data correctly and save in goalPositions
-
-        goalZoneController.SpawnGoals(goalPositions[0], goalPositions[1]);
+        goalZoneControllerScript.SpawnGoals(goalPositions[0], goalPositions[1]);
     }
 
 }

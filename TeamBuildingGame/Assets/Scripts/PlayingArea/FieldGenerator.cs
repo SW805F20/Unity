@@ -16,7 +16,7 @@ public class FieldGenerator : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start(){
+    public void CreatePlayingField(){
         MakeMeshData();
         CreateMesh();
         DefineUVs();
@@ -39,7 +39,7 @@ public class FieldGenerator : MonoBehaviour
         // Define how the triangles should be constructed for the mesh.
         // Should go from index 0 to 1 to 2 for first triangle and then
         // 2, 1, 3 for the second to construct a square.
-        triangles = new int[] { 0, 1, 2, 2, 1, 3 };
+        triangles = new int[] { 0, 1, 2, 0, 2, 3 };
     }
 
     /// <summary>
