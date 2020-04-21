@@ -68,7 +68,6 @@ public class TCPClient : MonoBehaviour
 
         // Close everything.
         stream.Close();
-        tcpClient.Close();
     }
 
     /// <summary> 
