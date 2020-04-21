@@ -8,6 +8,9 @@ public class ObjectMover : MonoBehaviour
     UDPClient clientData;
 
     [SerializeField]
+    GameObject playingField;
+
+    [SerializeField]
     GameObject team1Prefab;
     [SerializeField]
     GameObject team2Prefab;
@@ -23,16 +26,19 @@ public class ObjectMover : MonoBehaviour
         clientData = client.GetComponent<UDPClient>();
 
         ball = Instantiate(ballPrefab);
+        ball.transform.SetParent(playingField.transform);
         players = new GameObject[clientData.playerCount];
         for (int i = 0; i < clientData.playerCount; i++)
         {
             if (i < clientData.playerCount / 2)
             {
                 players[i] = Instantiate(team1Prefab);
+                players[i].transform.SetParent(playingField.transform);
             }
             else
             {
                 players[i] = Instantiate(team2Prefab);
+                players[i].transform.SetParent(playingField.transform);
             }
         }
     }
@@ -43,7 +49,7 @@ public class ObjectMover : MonoBehaviour
         ball.transform.position = clientData.ballPosition;
         for (int i = 0; i < clientData.playerCount; i++)
         {
-            players[i].transform.position = clientData.playerPositions[i];
+            players[i].transform.position = new Vector3(clientData.playerPositions[i].x, clientData.playerPositions[i].y, 5);
         }
     }
 }
