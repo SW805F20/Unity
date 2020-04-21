@@ -20,6 +20,7 @@ public class UDPClient : MonoBehaviour
     public int teamCount = 2;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
+
     
 
     void Awake()
