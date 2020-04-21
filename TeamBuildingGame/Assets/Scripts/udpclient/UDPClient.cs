@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System;
-using System.Collections.Generic;
+using System.Text;
 
 /// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
 public class UDPClient : MonoBehaviour
@@ -18,7 +18,6 @@ public class UDPClient : MonoBehaviour
     public int teamCount = 2;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
-    
 
     
 
@@ -26,6 +25,7 @@ public class UDPClient : MonoBehaviour
     {
         playerPositions = new Vector2[playerCount];
         ballPosition = new Vector2();
+
 
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
@@ -70,7 +70,7 @@ public class UDPClient : MonoBehaviour
         uClient.BeginReceive(new AsyncCallback(Receive), null);
 
         // The bytes that were received are converted to a string, which is written to the unity debug log.
-        string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
+        string returnData = Encoding.ASCII.GetString(receiveBytes);
         datagramMessage = returnData;
         datagramSender = "Adress: " + RemoteIpEndPoint.Address.ToString() + ", port: " + RemoteIpEndPoint.Port.ToString();
 
@@ -82,11 +82,15 @@ public class UDPClient : MonoBehaviour
     ///  Gets the datagram message and decodes it to find the type of message.
     ///  Depending on the type it calls the appropiate method to handle the message.
     /// </summary>
-    /// <param name="datagramMessage">The hex message send from the game server</param>
+    /// <param name="datagramMessage">The hex message sent from the game server</param>
     private void DatagramHandler(string datagramMessage)
     {
-            // Remove 0x from string before parsing
-        datagramMessage = datagramMessage.Remove(0, 2);
+        // Remove 0x from string before parsing
+        if(datagramMessage.ToLower().StartsWith("0x"))
+        {
+            datagramMessage = datagramMessage.Remove(0, 2);
+        }
+
         long data;
         byte type;
         if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
@@ -113,8 +117,8 @@ public class UDPClient : MonoBehaviour
     /// <param name="data">The datagram message in hex with the 0x removed</param>
     private void UpdatePlayerData(long data)
     {
-            // bitshifting the hex string and typecasting to byte to get the values.
-            // see network format in the report for more detail
+        // bitshifting the hex string and typecasting to byte to get the values.
+        // see network format in the report for more detail
         byte time = (byte)(data >> 8);
         byte id = (byte)(data >> 16);
         ushort x = (ushort)(data >> 24);
