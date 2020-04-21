@@ -15,7 +15,6 @@ public class FieldGenerator : MonoBehaviour
         mesh = GetComponent<MeshFilter>().mesh;
     }
 
-    // Start is called before the first frame update
     public void CreatePlayingField(){
         MakeMeshData();
         CreateMesh();

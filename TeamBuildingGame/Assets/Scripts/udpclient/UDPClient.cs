@@ -2,8 +2,6 @@
 using System.Net;
 using System.Net.Sockets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 /// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
