@@ -82,7 +82,7 @@ public class UDPClient : MonoBehaviour
     ///  Gets the datagram message and decodes it to find the type of message.
     ///  Depending on the type it calls the appropiate method to handle the message.
     /// </summary>
-    /// <param name="datagramMessage">The hex message send from the game server</param>
+    /// <param name="datagramMessage">The hex message sent from the game server</param>
     private void DatagramHandler(string datagramMessage)
     {
         // Remove 0x from string before parsing

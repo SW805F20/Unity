@@ -14,8 +14,11 @@ public class TCPClient : MonoBehaviour
     private GoalZoneController goalZoneControllerScript;
     private FieldGenerator fieldGeneratorScript;
 
-    public GameObject GoalZoneController;
-    public GameObject PlayingField;
+    [SerializeField]
+    private GameObject GoalZoneController;
+
+    [SerializeField]
+    private GameObject PlayingField;
 
 
 
@@ -47,12 +50,6 @@ public class TCPClient : MonoBehaviour
         tcpClient.Close();
     }
 
-    /// <summary> Receives the datagram. 
-    /// <param name="res">The result associated with the callback - the data.</param>
-    private void Receive(IAsyncResult res)
-    {
-
-    }
 
     private void StartListening()
     {
@@ -60,23 +57,14 @@ public class TCPClient : MonoBehaviour
         {
             tcpClient.Connect(ipAddress, portNumber);
         }
-        Debug.Log("Connected");
         
         NetworkStream stream = tcpClient.GetStream();
 
-        byte[] data = new byte[256];
+        byte[] data = new byte[1024];
 
         int bytes = stream.Read(data, 0, data.Length);
         string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-        Debug.Log($"Received: {responseData}");
         DatagramHandler(responseData);
-
-        string message = "Received the anchor positions";
-        data = System.Text.Encoding.ASCII.GetBytes(message);
-
-        stream.Write(data, 0, data.Length);
-
-        Console.WriteLine("Sent: {0}", message);
 
         // Close everything.
         stream.Close();
@@ -87,7 +75,7 @@ public class TCPClient : MonoBehaviour
     ///  Gets the datagram message and decodes it to find the type of message.
     ///  Depending on the type it calls the appropiate method to handle the message.
     /// </summary>
-    /// <param name="datagramMessage">The hex message send from the game server</param>
+    /// <param name="datagramMessage">The hex message sent from the game server</param>
     private void DatagramHandler(string datagramMessage)
     {
         // Remove 0x from string before parsing
@@ -97,7 +85,8 @@ public class TCPClient : MonoBehaviour
 
         for (int i = 1; i < hexStrings.Length; i++)
         {
-            if (long.TryParse(hexStrings[i], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
+            if (long.TryParse(hexStrings[i], System.Globalization.NumberStyles.HexNumber, 
+                    System.Globalization.CultureInfo.InvariantCulture, out data))
             {
                 type = (byte)data;
                 switch (type)
