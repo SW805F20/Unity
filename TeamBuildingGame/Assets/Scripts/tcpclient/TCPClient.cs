@@ -8,7 +8,7 @@ using System;
 public class TCPClient : MonoBehaviour
 {
     private TcpClient tcpClient;
-    private string ipAddress = "127.0.0.1";
+    private string ipAddress = "192.168.0.89";
     private int portNumber = 10000;
     private Vector2[] goalPositions;
     private GoalZoneController goalZoneControllerScript;
@@ -24,8 +24,18 @@ public class TCPClient : MonoBehaviour
 
     void Awake()
     {
-        // Establishes a udp connection on the port.
-        tcpClient = new TcpClient(ipAddress, portNumber);
+        try
+        {
+            // Establishes a udp connection on the port.
+            tcpClient = new TcpClient(ipAddress, portNumber);
+
+            if (tcpClient.Connected)
+                Console.WriteLine("Connected to: {0}:{1}", ipAddress, portNumber);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     // Start is called before the first frame update
@@ -53,11 +63,6 @@ public class TCPClient : MonoBehaviour
 
     private void StartListening()
     {
-        if (!tcpClient.Connected)
-        {
-            tcpClient.Connect(ipAddress, portNumber);
-        }
-        
         NetworkStream stream = tcpClient.GetStream();
 
         byte[] data = new byte[1024];
@@ -84,16 +89,22 @@ public class TCPClient : MonoBehaviour
 
         for (int i = 1; i < hexStrings.Length; i++)
         {
-            if (long.TryParse(hexStrings[i], System.Globalization.NumberStyles.HexNumber, 
+            if (long.TryParse(hexStrings[i], System.Globalization.NumberStyles.HexNumber,
                     System.Globalization.CultureInfo.InvariantCulture, out data))
             {
                 type = (byte)data;
                 switch (type)
                 {
-                    case 0:
+                    case 1:
                         AnchorPositionHandler(data, i);
                         break;
                     case 2:
+                        PlayerTagHandler(data);
+                        break;
+                    case 3:
+                        HandleGameStart(data);
+                        break;
+                    case 5:
                         GoalPositionHandler(data);
                         break;
                 }
@@ -103,6 +114,18 @@ public class TCPClient : MonoBehaviour
                 Debug.LogError("Network data could not be parsed");
             }
         }
+
+    }
+
+    private void HandleGameStart(long data)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void PlayerTagHandler(long data)
+    {
+        byte player_id = (byte)(data >> 8);
+        ushort tag_id = (ushort)(data >> 24);
 
     }
 
