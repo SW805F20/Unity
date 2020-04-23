@@ -8,8 +8,8 @@ using System;
 public class TCPClient : MonoBehaviour
 {
     private TcpClient tcpClient;
-    private string ipAddress = "192.168.0.89";
-    private int portNumber = 10000;
+    private string ipAddress = "192.168.0.89"; // This ip must be the same as the one the server is running on
+    private int portNumber = 10000; // This port must be the same as the one the server is running on
     private Vector2[] goalPositions;
     private GoalZoneController goalZoneControllerScript;
     private FieldGenerator fieldGeneratorScript;
@@ -142,8 +142,8 @@ public class TCPClient : MonoBehaviour
 
     private void PlayerTagHandler(long data)
     {
-        byte player_id = (byte)(data >> 8);
-        ushort tag_id = (ushort)(data >> 24);
+        ushort tag_id = (ushort)(data >> 16);
+        byte player_id = (byte)(data >> 24);
 
     }
 
@@ -152,6 +152,7 @@ public class TCPClient : MonoBehaviour
         byte id = (byte)(data >> 8);
         ushort x = (ushort)(data >> 16);
         ushort y = (ushort)(data >> 32);
+        // increment by 1 because the ID starts from 0
         switch(id + 1)
         {
             case 1:
