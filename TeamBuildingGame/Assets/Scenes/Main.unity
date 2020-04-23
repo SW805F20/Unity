@@ -183,8 +183,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor1: {x: 0, y: 0, z: 0}
   anchor2: {x: 0, y: 10, z: 0}
-  anchor3: {x: 20, y: 0, z: 0}
-  anchor4: {x: 20, y: 10, z: 0}
+  anchor3: {x: 20, y: 10, z: 0}
+  anchor4: {x: 20, y: 0, z: 0}
   fieldCreated: 0
   goalZoneHandler: {fileID: 1114001383}
 --- !u!33 &194931128
