@@ -26,7 +26,7 @@ public class TCPClient : MonoBehaviour
     {
         try
         {
-            // Establishes a udp connection on the port.
+            // Establishes a tcp connection on the port.
             tcpClient = new TcpClient(ipAddress, portNumber);
 
             if (tcpClient.Connected)
@@ -51,7 +51,10 @@ public class TCPClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(tcpClient.GetStream().DataAvailable)
+        {
+            StartListening();
+        }
     }
 
     void OnDestroy()
@@ -65,14 +68,29 @@ public class TCPClient : MonoBehaviour
     {
         NetworkStream stream = tcpClient.GetStream();
 
-        byte[] data = new byte[1024];
+
+        byte[] data = new byte[2];
 
         int bytes = stream.Read(data, 0, data.Length);
         string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        int package_length = 0;
+        try
+        {
+            package_length = Int32.Parse(responseData);
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine($"Unable to parse '{responseData}'");
+        }
+
+        byte[] package = new byte[package_length];
+
+        bytes = stream.Read(package, 0, package.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(package, 0, bytes);
+
         DatagramHandler(responseData);
 
-        // Close everything.
-        stream.Close();
     }
 
     /// <summary> 
@@ -83,37 +101,37 @@ public class TCPClient : MonoBehaviour
     private void DatagramHandler(string datagramMessage)
     {
         // Remove 0x from string before parsing
-        string[] hexStrings = datagramMessage.ToLower().Split(new string[] { "0x" }, StringSplitOptions.None);
+        if (datagramMessage.ToLower().StartsWith("0x"))
+        {
+            datagramMessage = datagramMessage.Remove(0, 2);
+        }
+
         long data;
         byte type;
-
-        for (int i = 1; i < hexStrings.Length; i++)
+        if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
         {
-            if (long.TryParse(hexStrings[i], System.Globalization.NumberStyles.HexNumber,
-                    System.Globalization.CultureInfo.InvariantCulture, out data))
+            type = (byte)data;
+            switch (type)
             {
-                type = (byte)data;
-                switch (type)
-                {
-                    case 1:
-                        AnchorPositionHandler(data, i);
-                        break;
-                    case 2:
-                        PlayerTagHandler(data);
-                        break;
-                    case 3:
-                        HandleGameStart(data);
-                        break;
-                    case 5:
-                        GoalPositionHandler(data);
-                        break;
-                }
-            }
-            else
-            {
-                Debug.LogError("Network data could not be parsed");
+                case 1:
+                    AnchorPositionHandler(data);
+                    break;
+                case 2:
+                    PlayerTagHandler(data);
+                    break;
+                case 3:
+                    HandleGameStart(data);
+                    break;
+                case 5:
+                    GoalPositionHandler(data);
+                    break;
             }
         }
+        else
+        {
+            Debug.LogError("Network data could not be parsed");
+        }
+        
 
     }
 
@@ -129,12 +147,12 @@ public class TCPClient : MonoBehaviour
 
     }
 
-    private void AnchorPositionHandler(long data, int anchorNumber)
+    private void AnchorPositionHandler(long data)
     {
         byte id = (byte)(data >> 8);
         ushort x = (ushort)(data >> 16);
         ushort y = (ushort)(data >> 32);
-        switch(anchorNumber)
+        switch(id + 1)
         {
             case 1:
                 fieldGeneratorScript.anchor1.x = x;
