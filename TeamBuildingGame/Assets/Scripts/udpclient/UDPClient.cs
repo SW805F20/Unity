@@ -7,25 +7,24 @@ using System.Text;
 /// <summary> UDPClient to be instantiated on each player. Starts listening for datagrams from a remote host.</summary>
 public class UDPClient : MonoBehaviour
 {
+    [SerializeField]
+    GameObject gameState;
+    GameStateHandler gameStateHandler;
     private UdpClient uClient;
     private string ipAddress = "224.3.29.71";
     private int portNumber = 10000;
     private string datagramMessage;
     private string datagramSender;
     private byte playerPacketTimestamp;
-
-    public int playerCount;
-    public int teamCount = 2;
-    public Vector2[] playerPositions;
-    public Vector2 ballPosition;
-
     
 
     void Awake()
     {
-        playerPositions = new Vector2[playerCount];
-        ballPosition = new Vector2();
+        // Get the game state handler for global variables.
+        gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
 
+        gameStateHandler.playerPositions = new Vector2[gameStateHandler.playerCount];
+        gameStateHandler.ballPosition = new Vector2();
 
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
@@ -129,15 +128,15 @@ public class UDPClient : MonoBehaviour
         {
             if (id == 0)
             {
-                ballPosition.x = x;
-                ballPosition.y = y;
+                gameStateHandler.ballPosition.x = x;
+                gameStateHandler.ballPosition.y = y;
             }
             else
             {
                 // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
                 id--;
-                playerPositions[id].x = x;
-                playerPositions[id].y = y;
+                gameStateHandler.playerPositions[id].x = x;
+                gameStateHandler.playerPositions[id].y = y;
             }
         }
         

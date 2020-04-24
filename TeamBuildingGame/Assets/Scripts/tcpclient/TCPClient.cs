@@ -7,6 +7,9 @@ using System;
 
 public class TCPClient : MonoBehaviour
 {
+    [SerializeField]
+    GameObject gameState;
+    GameStateHandler gameStateHandler;
     private TcpClient tcpClient;
     private string ipAddress = "192.168.0.89"; // This ip must be the same as the one the server is running on
     private int portNumber = 10000; // This port must be the same as the one the server is running on
@@ -14,16 +17,9 @@ public class TCPClient : MonoBehaviour
     private GoalZoneController goalZoneControllerScript;
     private FieldGenerator fieldGeneratorScript;
 
-    [SerializeField]
-    private GameObject GoalZoneController;
-
-    [SerializeField]
-    private GameObject PlayingField;
-
-
-
     void Awake()
     {
+        gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
         try
         {
             // Establishes a tcp connection on the port.
@@ -41,9 +37,9 @@ public class TCPClient : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        goalPositions = new Vector2[2];
-        goalZoneControllerScript = GoalZoneController.GetComponent<GoalZoneController>();
-        fieldGeneratorScript = PlayingField.GetComponent<FieldGenerator>();
+        gameStateHandler.goalPositions = new Vector2[2];
+        gameStateHandler.goalZoneControllerScript = gameStateHandler.GoalZoneController.GetComponent<GoalZoneController>();
+        gameStateHandler.fieldGeneratorScript = gameStateHandler.PlayingField.GetComponent<FieldGenerator>();
 
         StartListening();
     }
@@ -156,22 +152,22 @@ public class TCPClient : MonoBehaviour
         switch(id + 1)
         {
             case 1:
-                fieldGeneratorScript.anchor1.x = x;
-                fieldGeneratorScript.anchor1.y = y;
+                gameStateHandler.fieldGeneratorScript.anchor1.x = x;
+                gameStateHandler.fieldGeneratorScript.anchor1.y = y;
                 break;
             case 2:
-                fieldGeneratorScript.anchor2.x = x;
-                fieldGeneratorScript.anchor2.y = y;
+                gameStateHandler.fieldGeneratorScript.anchor2.x = x;
+                gameStateHandler.fieldGeneratorScript.anchor2.y = y;
                 break;
             case 3:
-                fieldGeneratorScript.anchor3.x = x;
-                fieldGeneratorScript.anchor3.y = y;
+                gameStateHandler.fieldGeneratorScript.anchor3.x = x;
+                gameStateHandler.fieldGeneratorScript.anchor3.y = y;
                 break;
             case 4:
-                fieldGeneratorScript.anchor4.x = x;
-                fieldGeneratorScript.anchor4.y = y;
+                gameStateHandler.fieldGeneratorScript.anchor4.x = x;
+                gameStateHandler.fieldGeneratorScript.anchor4.y = y;
                 // We have received all anchors and can render the playing field
-                fieldGeneratorScript.CreatePlayingField();
+                gameStateHandler.fieldGeneratorScript.CreatePlayingField();
                 break;
         }
     }
@@ -183,7 +179,7 @@ public class TCPClient : MonoBehaviour
     private void GoalPositionHandler(long data)
     {
         // Get data correctly and save in goalPositions
-        goalZoneControllerScript.SpawnGoals(goalPositions[0], goalPositions[1]);
+        gameStateHandler.goalZoneControllerScript.SpawnGoals(gameStateHandler.goalPositions[0], gameStateHandler.goalPositions[1]);
     }
 
 }
