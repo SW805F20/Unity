@@ -16,6 +16,7 @@ public class TCPClient : MonoBehaviour
 
     void Awake()
     {
+        gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
         // Establishes a udp connection on the port.
         tcpClient = new TcpClient(ipAddress, portNumber);
     }
