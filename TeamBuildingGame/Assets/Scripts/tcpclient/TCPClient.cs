@@ -61,6 +61,7 @@ public class TCPClient : MonoBehaviour
     {
         NetworkStream stream = tcpClient.GetStream();
 
+        // Is 2 because the first 2 bytes of a message contains the length of the rest of the package
         byte[] data = new byte[2];
 
         int bytes = stream.Read(data, 0, data.Length);
