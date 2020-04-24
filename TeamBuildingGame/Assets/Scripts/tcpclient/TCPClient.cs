@@ -11,14 +11,24 @@ public class TCPClient : MonoBehaviour
     GameObject gameState;
     GameStateHandler gameStateHandler;
     private TcpClient tcpClient;
-    private string ipAddress = "127.0.0.1";
-    private int portNumber = 10000;
+    private string ipAddress = "192.168.0.89"; // This ip must be the same as the one the server is running on
+    private int portNumber = 10000; // This port must be the same as the one the server is running on
 
     void Awake()
     {
         gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
-        // Establishes a udp connection on the port.
-        tcpClient = new TcpClient(ipAddress, portNumber);
+        try
+        {
+            // Establishes a tcp connection on the port.
+            tcpClient = new TcpClient(ipAddress, portNumber);
+
+            if (tcpClient.Connected)
+                Console.WriteLine("Connected to: {0}:{1}", ipAddress, portNumber);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     // Start is called before the first frame update
@@ -34,7 +44,10 @@ public class TCPClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(tcpClient.GetStream().DataAvailable)
+        {
+            StartListening();
+        }
     }
 
     void OnDestroy()
@@ -46,21 +59,31 @@ public class TCPClient : MonoBehaviour
 
     private void StartListening()
     {
-        if (!tcpClient.Connected)
-        {
-            tcpClient.Connect(ipAddress, portNumber);
-        }
-        
         NetworkStream stream = tcpClient.GetStream();
 
-        byte[] data = new byte[1024];
+        // Is 2 because the first 2 bytes of a message contains the length of the rest of the package
+        byte[] data = new byte[2];
 
         int bytes = stream.Read(data, 0, data.Length);
         string responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+        int package_length = 0;
+        try
+        {
+            package_length = Int32.Parse(responseData);
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine($"Unable to parse '{responseData}'");
+        }
+
+        byte[] package = new byte[package_length];
+
+        bytes = stream.Read(package, 0, package.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(package, 0, bytes);
+
         DatagramHandler(responseData);
 
-        // Close everything.
-        stream.Close();
     }
 
     /// <summary> 
@@ -71,40 +94,59 @@ public class TCPClient : MonoBehaviour
     private void DatagramHandler(string datagramMessage)
     {
         // Remove 0x from string before parsing
-        string[] hexStrings = datagramMessage.ToLower().Split(new string[] { "0x" }, StringSplitOptions.None);
+        if (datagramMessage.ToLower().StartsWith("0x"))
+        {
+            datagramMessage = datagramMessage.Remove(0, 2);
+        }
+
         long data;
         byte type;
-
-        for (int i = 1; i < hexStrings.Length; i++)
+        if (long.TryParse(datagramMessage, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out data))
         {
-            if (long.TryParse(hexStrings[i], System.Globalization.NumberStyles.HexNumber, 
-                    System.Globalization.CultureInfo.InvariantCulture, out data))
+            type = (byte)data;
+            switch (type)
             {
-                type = (byte)data;
-                switch (type)
-                {
-                    case 0:
-                        AnchorPositionHandler(data, i);
-                        break;
-                    case 2:
-                        GoalPositionHandler(data);
-                        break;
-                }
-            }
-            else
-            {
-                Debug.LogError("Network data could not be parsed");
+                case 1:
+                    AnchorPositionHandler(data);
+                    break;
+                case 2:
+                    PlayerTagHandler(data);
+                    break;
+                case 3:
+                    HandleGameStart(data);
+                    break;
+                case 5:
+                    GoalPositionHandler(data);
+                    break;
             }
         }
+        else
+        {
+            Debug.LogError("Network data could not be parsed");
+        }
+        
 
     }
 
-    private void AnchorPositionHandler(long data, int anchorNumber)
+    private void HandleGameStart(long data)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void PlayerTagHandler(long data)
+    {
+        ushort tag_id = (ushort)(data >> 16);
+        byte player_id = (byte)(data >> 24);
+
+    }
+
+    private void AnchorPositionHandler(long data)
     {
         byte id = (byte)(data >> 8);
         ushort x = (ushort)(data >> 16);
         ushort y = (ushort)(data >> 32);
-        switch(anchorNumber)
+        // increment by 1 because the ID starts from 0
+        switch(id + 1)
         {
             case 1:
                 gameStateHandler.fieldGeneratorScript.anchor1.x = x;
