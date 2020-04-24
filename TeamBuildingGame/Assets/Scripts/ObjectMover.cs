@@ -5,19 +5,16 @@ using UnityEngine;
 public class ObjectMover : MonoBehaviour
 {
     GameObject client;
+
+    [SerializeField]
+    GameObject gameState;
+    GameStateHandler gameStateHandler;
+
     UDPClient clientData;
 
-    [SerializeField]
-    GameObject playingField;
-
-    [SerializeField]
-    GameObject team1Prefab;
-    [SerializeField]
-    GameObject team2Prefab;
-    [SerializeField]
-    GameObject ballPrefab;
-    GameObject ball;
-    GameObject[] players;
+    void Awake() {
+        gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -25,20 +22,20 @@ public class ObjectMover : MonoBehaviour
         client = GameObject.Find("CLIENT");
         clientData = client.GetComponent<UDPClient>();
 
-        ball = Instantiate(ballPrefab);
-        ball.transform.SetParent(playingField.transform);
-        players = new GameObject[clientData.playerCount];
-        for (int i = 0; i < clientData.playerCount; i++)
+        gameStateHandler.ball = Instantiate(gameStateHandler.ballPrefab);
+        gameStateHandler.ball.transform.SetParent(gameStateHandler.playingField.transform);
+        gameStateHandler.players = new GameObject[gameStateHandler.playerCount];
+        for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
-            if (i < clientData.playerCount / 2)
+            if (i < gameStateHandler.playerCount / 2)
             {
-                players[i] = Instantiate(team1Prefab);
-                players[i].transform.SetParent(playingField.transform);
+                gameStateHandler.players[i] = Instantiate(gameStateHandler.team1Prefab);
+                gameStateHandler.players[i].transform.SetParent(gameStateHandler.playingField.transform);
             }
             else
             {
-                players[i] = Instantiate(team2Prefab);
-                players[i].transform.SetParent(playingField.transform);
+                gameStateHandler.players[i] = Instantiate(gameStateHandler.team2Prefab);
+                gameStateHandler.players[i].transform.SetParent(gameStateHandler.playingField.transform);
             }
         }
     }
@@ -46,10 +43,10 @@ public class ObjectMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ball.transform.position = clientData.ballPosition;
-        for (int i = 0; i < clientData.playerCount; i++)
+        gameStateHandler.ball.transform.position = gameStateHandler.ballPosition;
+        for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
-            players[i].transform.position = new Vector3(clientData.playerPositions[i].x, clientData.playerPositions[i].y, 5);
+            gameStateHandler.players[i].transform.position = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, 5);
         }
     }
 }
