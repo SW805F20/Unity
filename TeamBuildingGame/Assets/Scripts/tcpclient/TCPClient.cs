@@ -13,9 +13,6 @@ public class TCPClient : MonoBehaviour
     private TcpClient tcpClient;
     private string ipAddress = "192.168.0.89"; // This ip must be the same as the one the server is running on
     private int portNumber = 10000; // This port must be the same as the one the server is running on
-    private Vector2[] goalPositions;
-    private GoalZoneController goalZoneControllerScript;
-    private FieldGenerator fieldGeneratorScript;
 
     void Awake()
     {
@@ -63,7 +60,6 @@ public class TCPClient : MonoBehaviour
     private void StartListening()
     {
         NetworkStream stream = tcpClient.GetStream();
-
 
         byte[] data = new byte[2];
 
