@@ -647,6 +647,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  goalSize: 0
   GoalZoneController: {fileID: 1114001383}
   PlayingField: {fileID: 194931124}
   goalPositions: []

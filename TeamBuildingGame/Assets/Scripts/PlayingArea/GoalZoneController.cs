@@ -5,73 +5,48 @@ using UnityEngine;
 
 public class GoalZoneController : MonoBehaviour
 {
-    float[] xSizeArray, ySizeArray; // Arrays for all sizes on both x and y axis, used to find maximum and minimum values
-    float goalSizeOffset;
 
     public GameObject blueGoal, redGoal;
-    public float goalLengthPercentage; // The percentage size of the edges of a goal. The percentage is based on the shortest edge.
-    public GameObject playingField;
     public GoalZoneRenderer blueGoalMesh, redGoalMesh;
 
-    // x and y differences are the difference between the maximum and minimum values. Goalzone edge length is how long each edge is. The middle offset is the distance between the midpoint and an edge.
-    [HideInInspector]
-    public float maxX, maxY, minX, minY, xDifference, yDifference, goalZoneEdgeLength, goalZoneMiddleOffset;
-    
     [SerializeField]
     bool goalScored = false;  
 
     [HideInInspector]
-    public Vector2 centerOfField, centerOfBlueGoal, centerOfRedGoal;
+    public Vector2  centerOfBlueGoal, centerOfRedGoal;
 
-    [HideInInspector]
-    public Vector3 fieldAnchor1, fieldAnchor2, fieldAnchor3, fieldAnchor4;
 
     /// <summary> This method uses Unity's awake method to define starting requirements.
     ///    It gets the anchors from the playingField game object, and uses these to create arrays of their positions.
     ///    Finally it gets the rendering components of the goalzone child game objects.</summary>
     void Awake()
     {
-        fieldAnchor1 = playingField.GetComponent<FieldGenerator>().anchor1;
-        fieldAnchor2 = playingField.GetComponent<FieldGenerator>().anchor2;
-        fieldAnchor3 = playingField.GetComponent<FieldGenerator>().anchor3;
-        fieldAnchor4 = playingField.GetComponent<FieldGenerator>().anchor4;
-
-        xSizeArray = new float[] { fieldAnchor1.x, fieldAnchor2.x, fieldAnchor3.x, fieldAnchor4.x };
-        ySizeArray = new float[] { fieldAnchor1.y, fieldAnchor2.y, fieldAnchor3.y, fieldAnchor4.y };
-
         blueGoalMesh = blueGoal.GetComponent<GoalZoneRenderer>();
         redGoalMesh = redGoal.GetComponent<GoalZoneRenderer>();
     }
 
-    /// <summary> This method uses Unity's start method to define maximum and minimum coordinate values.
-    ///    It then defines the center of the field, and calls the necessary methods to create the starting goalzones.</summary>
-    void Start()
+    /// <summary>
+    /// Spawns red goal
+    /// </summary>
+    /// <param name="redGoalCenter">Center of the red goal</param>
+    public void SpawnRedGoal(Vector2 redGoalCenter, int goalZoneCenterOffset)
     {
-        var allSides = new float[] { fieldAnchor2.y - fieldAnchor1.y, fieldAnchor3.x - fieldAnchor2.x, fieldAnchor3.y - fieldAnchor4.y, fieldAnchor4.x - fieldAnchor1.x };
-        float smallestSide = Mathf.Min(allSides);
-        goalSizeOffset = (smallestSide / 100f * goalLengthPercentage) / 2f;
+        Vector3[] redCorners = CreateGoalCorners(redGoalCenter, goalZoneCenterOffset);
+
+        redGoalMesh.MakeMeshData(redCorners);
     }
 
-    /// <summary> This method uses Unity's update method to continually check for goals being scored.
-    ///    If a goal is scored it should make new goalzones and flip sides.</summary>
-    void Update()
-    {
-
-    }
 
     /// <summary>
     /// Spawns the goals 
     /// </summary>
     /// <param name="redGoalCenter">Center of the red goal</param>
     /// <param name="blueGoalCenter">Center of the blue goal</param>
-    public void SpawnGoals(Vector2 redGoalCenter, Vector2 blueGoalCenter)
+    public void SpawnBlueGoal( Vector2 blueGoalCenter, int goalZoneCenterOffset)
     {
-        Vector3[] redCorners = CreateGoalCorners(redGoalCenter);
-        Vector3[] blueCorners = CreateGoalCorners(blueGoalCenter);
+        Vector3[] blueCorners = CreateGoalCorners(blueGoalCenter, goalZoneCenterOffset);
 
-        redGoalMesh.MakeMeshData(redCorners);
         blueGoalMesh.MakeMeshData(blueCorners);
-
     }
 
     /// <summary>
@@ -79,7 +54,7 @@ public class GoalZoneController : MonoBehaviour
     /// </summary>
     /// <param name="goalCenter">The center of a given goal</param>
     /// <returns></returns>
-    private Vector3[] CreateGoalCorners(Vector2 goalCenter)
+    private Vector3[] CreateGoalCorners(Vector2 goalCenter, int goalSizeOffset)
     {
         float zAxisOffset = 0;
 

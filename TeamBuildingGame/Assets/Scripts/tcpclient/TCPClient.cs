@@ -175,8 +175,22 @@ public class TCPClient : MonoBehaviour
     /// <param name="data">The datagram message in hex with the 0x removed</param>
     private void GoalPositionHandler(long data)
     {
-        // Get data correctly and save in goalPositions
-        gameStateHandler.goalZoneControllerScript.SpawnGoals(gameStateHandler.goalPositions[0], gameStateHandler.goalPositions[1]);
+        byte teamId = (byte)(data >> 8);
+        ushort x = (ushort)(data >> 16);
+        ushort y = (ushort)(data >> 32);
+        ushort goalZoneCenterOffset = (ushort)(data >> 48);
+
+        // blue goalzone
+        if(teamId == 0)
+        {
+            gameStateHandler.goalZoneControllerScript.SpawnBlueGoal(new Vector2(x, y), goalZoneCenterOffset);
+        }
+        else
+        {
+            gameStateHandler.goalZoneControllerScript.SpawnRedGoal(new Vector2(x, y), goalZoneCenterOffset);
+        }
+        // red goalzone
+        
     }
 
 }
