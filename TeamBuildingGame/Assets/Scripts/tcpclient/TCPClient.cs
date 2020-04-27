@@ -178,7 +178,7 @@ public class TCPClient : MonoBehaviour
         byte teamId = (byte)(data >> 8);
         ushort x = (ushort)(data >> 16);
         ushort y = (ushort)(data >> 32);
-        ushort goalZoneCenterOffset = (ushort)(data >> 48);
+        byte goalZoneCenterOffset = (byte)(data >> 48);
 
         gameStateHandler.goalZoneControllerScript.SpawnGoal(new Vector2(x, y), goalZoneCenterOffset, teamId);
     }
