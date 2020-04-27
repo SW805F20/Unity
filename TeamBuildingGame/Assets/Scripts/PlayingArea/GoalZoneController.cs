@@ -9,9 +9,6 @@ public class GoalZoneController : MonoBehaviour
     public GameObject blueGoal, redGoal;
     public GoalZoneRenderer blueGoalMesh, redGoalMesh;
 
-    [SerializeField]
-    bool goalScored = false;  
-
     [HideInInspector]
     public Vector2 centerOfBlueGoal, centerOfRedGoal;
 
@@ -29,6 +26,7 @@ public class GoalZoneController : MonoBehaviour
     /// Spawns red goal
     /// </summary>
     /// <param name="redGoalCenter">Center of the red goal</param>
+    /// <param name="goalZoneCenterOffset">the length from the center of the goal to the edge</param>
     public void SpawnRedGoal(Vector2 redGoalCenter, int goalZoneCenterOffset)
     {
         Vector3[] redCorners = CreateGoalCorners(redGoalCenter, goalZoneCenterOffset);
@@ -40,11 +38,11 @@ public class GoalZoneController : MonoBehaviour
     /// <summary>
     /// Spawns the goals 
     /// </summary>
-    /// <param name="redGoalCenter">Center of the red goal</param>
-    /// <param name="blueGoalCenter">Center of the blue goal</param>
-    public void SpawnBlueGoal(Vector2 blueGoalCenter, int goalZoneCenterOffset)
+    /// <param name="goalCenter">Center of the blue goal</param>
+    /// <param name="goalZoneCenterOffset">the length from the center of the goal to the edge</param>
+    public void SpawnGoal(Vector2 goalCenter, int goalZoneCenterOffset)
     {
-        Vector3[] blueCorners = CreateGoalCorners(blueGoalCenter, goalZoneCenterOffset);
+        Vector3[] blueCorners = CreateGoalCorners(goalCenter, goalZoneCenterOffset);
 
         blueGoalMesh.MakeMeshData(blueCorners);
     }
@@ -53,17 +51,18 @@ public class GoalZoneController : MonoBehaviour
     /// Creates the corners of a goal based of the center of the goal and the given size of the goal
     /// </summary>
     /// <param name="goalCenter">The center of a given goal</param>
+    /// <param name="goalZoneCenterOffset">the length from the center of the goal to the edge</param>
     /// <returns></returns>
-    private Vector3[] CreateGoalCorners(Vector2 goalCenter, int goalSizeOffset)
+    private Vector3[] CreateGoalCorners(Vector2 goalCenter, int goalZoneCenterOffset)
     {
         float zAxisOffset = 0;
 
         Vector3[] corners = new Vector3[4];
         // corners[0] is the lower left corner, they then proceed clockwise
-        corners[0] = new Vector3(goalCenter.x - goalSizeOffset, goalCenter.y - goalSizeOffset, zAxisOffset);
-        corners[1] = new Vector3(goalCenter.x - goalSizeOffset, goalCenter.y + goalSizeOffset, zAxisOffset);
-        corners[2] = new Vector3(goalCenter.x + goalSizeOffset, goalCenter.y + goalSizeOffset, zAxisOffset);
-        corners[3] = new Vector3(goalCenter.x + goalSizeOffset, goalCenter.y - goalSizeOffset, zAxisOffset);
+        corners[0] = new Vector3(goalCenter.x - goalZoneCenterOffset, goalCenter.y - goalZoneCenterOffset, zAxisOffset);
+        corners[1] = new Vector3(goalCenter.x - goalZoneCenterOffset, goalCenter.y + goalZoneCenterOffset, zAxisOffset);
+        corners[2] = new Vector3(goalCenter.x + goalZoneCenterOffset, goalCenter.y + goalZoneCenterOffset, zAxisOffset);
+        corners[3] = new Vector3(goalCenter.x + goalZoneCenterOffset, goalCenter.y - goalZoneCenterOffset, zAxisOffset);
         return corners;
     }
 }
