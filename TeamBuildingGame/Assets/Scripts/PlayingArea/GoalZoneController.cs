@@ -13,7 +13,7 @@ public class GoalZoneController : MonoBehaviour
     bool goalScored = false;  
 
     [HideInInspector]
-    public Vector2  centerOfBlueGoal, centerOfRedGoal;
+    public Vector2 centerOfBlueGoal, centerOfRedGoal;
 
 
     /// <summary> This method uses Unity's awake method to define starting requirements.
@@ -42,7 +42,7 @@ public class GoalZoneController : MonoBehaviour
     /// </summary>
     /// <param name="redGoalCenter">Center of the red goal</param>
     /// <param name="blueGoalCenter">Center of the blue goal</param>
-    public void SpawnBlueGoal( Vector2 blueGoalCenter, int goalZoneCenterOffset)
+    public void SpawnBlueGoal(Vector2 blueGoalCenter, int goalZoneCenterOffset)
     {
         Vector3[] blueCorners = CreateGoalCorners(blueGoalCenter, goalZoneCenterOffset);
 
