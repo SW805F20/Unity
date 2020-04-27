@@ -185,11 +185,12 @@ public class TCPClient : MonoBehaviour
         {
             gameStateHandler.goalZoneControllerScript.SpawnBlueGoal(new Vector2(x, y), goalZoneCenterOffset);
         }
-        else
+        // red goalzone
+        else if (teamId == 1)
         {
             gameStateHandler.goalZoneControllerScript.SpawnRedGoal(new Vector2(x, y), goalZoneCenterOffset);
         }
-        // red goalzone
+        
         
     }
 
