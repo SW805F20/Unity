@@ -9,10 +9,6 @@ public class GoalZoneController : MonoBehaviour
     public GameObject blueGoal, redGoal;
     public GoalZoneRenderer blueGoalMesh, redGoalMesh;
 
-    [HideInInspector]
-    public Vector2 centerOfBlueGoal, centerOfRedGoal;
-
-
     /// <summary> This method uses Unity's awake method to define starting requirements.
     ///    It gets the anchors from the playingField game object, and uses these to create arrays of their positions.
     ///    Finally it gets the rendering components of the goalzone child game objects.</summary>
@@ -23,28 +19,24 @@ public class GoalZoneController : MonoBehaviour
     }
 
     /// <summary>
-    /// Spawns red goal
-    /// </summary>
-    /// <param name="redGoalCenter">Center of the red goal</param>
-    /// <param name="goalZoneCenterOffset">the length from the center of the goal to the edge</param>
-    public void SpawnRedGoal(Vector2 redGoalCenter, int goalZoneCenterOffset)
-    {
-        Vector3[] redCorners = CreateGoalCorners(redGoalCenter, goalZoneCenterOffset);
-
-        redGoalMesh.MakeMeshData(redCorners);
-    }
-
-
-    /// <summary>
     /// Spawns the goals 
     /// </summary>
     /// <param name="goalCenter">Center of the blue goal</param>
     /// <param name="goalZoneCenterOffset">the length from the center of the goal to the edge</param>
-    public void SpawnGoal(Vector2 goalCenter, int goalZoneCenterOffset)
+    /// <param name="teamId">the id of the team</param>
+    public void SpawnGoal(Vector2 goalCenter, int goalZoneCenterOffset, byte teamId)
     {
-        Vector3[] blueCorners = CreateGoalCorners(goalCenter, goalZoneCenterOffset);
 
-        blueGoalMesh.MakeMeshData(blueCorners);
+        Vector3[] goalCorners = CreateGoalCorners(goalCenter, goalZoneCenterOffset);
+        if(teamId == 0)
+        {
+            blueGoalMesh.MakeMeshData(goalCorners);
+        } 
+        else if (teamId == 1)
+        {
+            redGoalMesh.MakeMeshData(goalCorners);
+        }
+
     }
 
     /// <summary>

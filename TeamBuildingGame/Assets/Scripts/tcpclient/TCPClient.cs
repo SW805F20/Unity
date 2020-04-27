@@ -180,18 +180,7 @@ public class TCPClient : MonoBehaviour
         ushort y = (ushort)(data >> 32);
         ushort goalZoneCenterOffset = (ushort)(data >> 48);
 
-        // blue goalzone
-        if(teamId == 0)
-        {
-            gameStateHandler.goalZoneControllerScript.SpawnBlueGoal(new Vector2(x, y), goalZoneCenterOffset);
-        }
-        // red goalzone
-        else if (teamId == 1)
-        {
-            gameStateHandler.goalZoneControllerScript.SpawnRedGoal(new Vector2(x, y), goalZoneCenterOffset);
-        }
-        
-        
+        gameStateHandler.goalZoneControllerScript.SpawnGoal(new Vector2(x, y), goalZoneCenterOffset, teamId);
     }
 
 }
