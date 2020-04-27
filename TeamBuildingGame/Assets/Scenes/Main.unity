@@ -634,7 +634,7 @@ MonoBehaviour:
   teamCount: 2
   playerPositions: []
   ballPosition: {x: 0, y: 0}
-  playingField: {fileID: 194931124}
+  playingField: {fileID: 846146055}
   team1Prefab: {fileID: 8638558989047265842, guid: 410c054a3556d5443a72aeda17474802,
     type: 3}
   team2Prefab: {fileID: 5303904888618101902, guid: 4559fe7154b30064aa495e72636f8966,
@@ -649,7 +649,6 @@ MonoBehaviour:
   - {fileID: 0}
   goalSize: 0
   GoalZoneController: {fileID: 1114001383}
-  PlayingField: {fileID: 194931124}
   goalPositions: []
   goalZoneControllerScript: {fileID: 3120632891150843213, guid: 1e6aeaad79971f9498bc99b3d4bab495,
     type: 3}
@@ -730,26 +729,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blueGoal: {fileID: 684829590}
   redGoal: {fileID: 1349755617}
-  goalLengthPercentage: 20
-  playingField: {fileID: 194931124}
   blueGoalMesh: {fileID: 684829591}
   redGoalMesh: {fileID: 1349755618}
-  maxX: 0
-  maxY: 0
-  minX: 0
-  minY: 0
-  xDifference: 0
-  yDifference: 0
-  goalZoneEdgeLength: 0
-  goalZoneMiddleOffset: 0
   goalScored: 0
-  centerOfField: {x: 0, y: 0}
   centerOfBlueGoal: {x: 0, y: 0}
   centerOfRedGoal: {x: 0, y: 0}
-  fieldAnchor1: {x: 0, y: 0, z: 0}
-  fieldAnchor2: {x: 0, y: 0, z: 0}
-  fieldAnchor3: {x: 0, y: 0, z: 0}
-  fieldAnchor4: {x: 0, y: 0, z: 0}
 --- !u!4 &1114001385
 Transform:
   m_ObjectHideFlags: 0

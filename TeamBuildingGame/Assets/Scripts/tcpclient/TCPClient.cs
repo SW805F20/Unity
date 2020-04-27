@@ -36,7 +36,7 @@ public class TCPClient : MonoBehaviour
     {
         gameStateHandler.goalPositions = new Vector2[2];
         gameStateHandler.goalZoneControllerScript = gameStateHandler.GoalZoneController.GetComponent<GoalZoneController>();
-        gameStateHandler.fieldGeneratorScript = gameStateHandler.PlayingField.GetComponent<FieldGenerator>();
+        gameStateHandler.fieldGeneratorScript = gameStateHandler.playingField.GetComponentInChildren<FieldGenerator>();
 
         StartListening();
     }
