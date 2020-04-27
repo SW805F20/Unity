@@ -97,7 +97,7 @@ public class UDPClient : MonoBehaviour
             type = (byte)data;
             switch (type)
             {
-                case 1:
+                case 0:
                     UpdatePlayerData(data);
                     break;
 

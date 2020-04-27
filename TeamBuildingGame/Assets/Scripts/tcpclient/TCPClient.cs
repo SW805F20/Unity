@@ -36,7 +36,7 @@ public class TCPClient : MonoBehaviour
     {
         gameStateHandler.goalPositions = new Vector2[2];
         gameStateHandler.goalZoneControllerScript = gameStateHandler.GoalZoneController.GetComponent<GoalZoneController>();
-        gameStateHandler.fieldGeneratorScript = gameStateHandler.PlayingField.GetComponent<FieldGenerator>();
+        gameStateHandler.fieldGeneratorScript = gameStateHandler.playingField.GetComponentInChildren<FieldGenerator>();
 
         StartListening();
     }
@@ -175,8 +175,12 @@ public class TCPClient : MonoBehaviour
     /// <param name="data">The datagram message in hex with the 0x removed</param>
     private void GoalPositionHandler(long data)
     {
-        // Get data correctly and save in goalPositions
-        gameStateHandler.goalZoneControllerScript.SpawnGoals(gameStateHandler.goalPositions[0], gameStateHandler.goalPositions[1]);
+        byte teamId = (byte)(data >> 8);
+        ushort x = (ushort)(data >> 16);
+        ushort y = (ushort)(data >> 32);
+        byte goalZoneCenterOffset = (byte)(data >> 48);
+
+        gameStateHandler.goalZoneControllerScript.SpawnGoal(new Vector2(x, y), goalZoneCenterOffset, teamId);
     }
 
 }
