@@ -304,7 +304,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 500
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -633,7 +633,7 @@ MonoBehaviour:
   playerCount: 4
   teamCount: 2
   playerPositions: []
-  ballPosition: {x: 0, y: 0}
+  ballPosition: {x: 0, y: 0, z: 0}
   playingField: {fileID: 846146055}
   team1Prefab: {fileID: 8638558989047265842, guid: 410c054a3556d5443a72aeda17474802,
     type: 3}
@@ -653,6 +653,8 @@ MonoBehaviour:
   goalZoneControllerScript: {fileID: 3120632891150843213, guid: 1e6aeaad79971f9498bc99b3d4bab495,
     type: 3}
   fieldGeneratorScript: {fileID: 0}
+  mainCamera: {fileID: 519420031}
+  distanceFromCamera: 9
 --- !u!4 &859500852
 Transform:
   m_ObjectHideFlags: 0
@@ -731,9 +733,6 @@ MonoBehaviour:
   redGoal: {fileID: 1349755617}
   blueGoalMesh: {fileID: 684829591}
   redGoalMesh: {fileID: 1349755618}
-  goalScored: 0
-  centerOfBlueGoal: {x: 0, y: 0}
-  centerOfRedGoal: {x: 0, y: 0}
 --- !u!4 &1114001385
 Transform:
   m_ObjectHideFlags: 0

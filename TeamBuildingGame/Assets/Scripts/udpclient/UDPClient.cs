@@ -23,7 +23,7 @@ public class UDPClient : MonoBehaviour
         // Get the game state handler for global variables.
         gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
 
-        gameStateHandler.playerPositions = new Vector2[gameStateHandler.playerCount];
+        gameStateHandler.playerPositions = new Vector3[gameStateHandler.playerCount];
         gameStateHandler.ballPosition = new Vector2();
 
         // Establishes a udp connection on the port.
