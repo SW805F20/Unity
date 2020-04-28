@@ -21,4 +21,6 @@ public class GameStateHandler : MonoBehaviour
     public FieldGenerator fieldGeneratorScript;
     public Camera mainCamera;
     public int distanceFromCamera;
+    public int middleX;
+    public int middleY;
 }

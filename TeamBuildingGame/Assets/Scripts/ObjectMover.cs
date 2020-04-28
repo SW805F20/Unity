@@ -12,8 +12,9 @@ public class ObjectMover : MonoBehaviour
 
     UDPClient clientData;
 
-    void Awake() {
-        gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
+    void Awake()
+    {
+        gameStateHandler = gameState.GetComponent<GameStateHandler>();
     }
 
     // Start is called before the first frame update
@@ -44,13 +45,23 @@ public class ObjectMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameStateHandler.ball.transform.position = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, 5);
+        UpdateBall();
+        var fieldoffset = new Vector3(gameStateHandler.middleX, gameStateHandler.middleY, 0);
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
-            var test = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, 0);
-            Vector3 newPosition = test + gameStateHandler.mainCamera.transform.position + gameStateHandler.mainCamera.transform.forward * gameStateHandler.distanceFromCamera;
+            var relativePosition = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, 0);
+            Vector3 newPosition = (gameStateHandler.mainCamera.transform.position + gameStateHandler.mainCamera.transform.forward * gameStateHandler.distanceFromCamera) - fieldoffset + relativePosition;
             gameStateHandler.players[i].transform.position = newPosition;
             gameStateHandler.players[i].transform.rotation = gameStateHandler.mainCamera.transform.localRotation;
         }
+    }
+
+    void UpdateBall(){
+        var fieldoffset = new Vector3(gameStateHandler.middleX, gameStateHandler.middleY, 0);
+        //gameStateHandler.ball.transform.position = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, 5);
+        var relativePosition = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, 0);
+        Vector3 newPosition = (gameStateHandler.mainCamera.transform.position + gameStateHandler.mainCamera.transform.forward * gameStateHandler.distanceFromCamera) - fieldoffset + relativePosition;
+        gameStateHandler.ball.transform.position = newPosition;
+        gameStateHandler.ball.transform.rotation = gameStateHandler.mainCamera.transform.localRotation;
     }
 }

@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 194931129}
   m_Layer: 0
   m_Name: PlayingField
-  m_TagString: Untagged
+  m_TagString: PlayingField
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playingField: {fileID: 194931127}
+  gameState: {fileID: 859500850}
 --- !u!114 &194931127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,9 +183,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anchor1: {x: 0, y: 0, z: 0}
-  anchor2: {x: 0, y: 10, z: 0}
-  anchor3: {x: 20, y: 10, z: 0}
-  anchor4: {x: 20, y: 0, z: 0}
+  anchor2: {x: 0, y: 1000, z: 0}
+  anchor3: {x: 2000, y: 1000, z: 0}
+  anchor4: {x: 2000, y: 0, z: 0}
   fieldCreated: 0
   goalZoneHandler: {fileID: 1114001383}
 --- !u!33 &194931128
@@ -568,7 +569,7 @@ GameObject:
   - component: {fileID: 846146056}
   m_Layer: 0
   m_Name: PlayingFieldContainer
-  m_TagString: Untagged
+  m_TagString: PlayingField
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -654,7 +655,9 @@ MonoBehaviour:
     type: 3}
   fieldGeneratorScript: {fileID: 0}
   mainCamera: {fileID: 519420031}
-  distanceFromCamera: 9
+  distanceFromCamera: 1000
+  middleX: 0
+  middleY: 0
 --- !u!4 &859500852
 Transform:
   m_ObjectHideFlags: 0
