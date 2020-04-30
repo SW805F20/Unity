@@ -634,7 +634,7 @@ MonoBehaviour:
   teamCount: 2
   playerPositions: []
   ballPosition: {x: 0, y: 0}
-  playingField: {fileID: 846146055}
+  playingFieldContainer: {fileID: 846146055}
   playingFieldObject: {fileID: 194931124}
   team1Prefab: {fileID: 8638558989047265842, guid: 410c054a3556d5443a72aeda17474802,
     type: 3}
