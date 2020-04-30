@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 194931129}
   m_Layer: 0
   m_Name: PlayingField
-  m_TagString: PlayingField
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,7 +169,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playingField: {fileID: 194931127}
-  gameState: {fileID: 859500850}
 --- !u!114 &194931127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,9 +182,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anchor1: {x: 0, y: 0, z: 0}
-  anchor2: {x: 0, y: 1000, z: 0}
-  anchor3: {x: 2000, y: 1000, z: 0}
-  anchor4: {x: 2000, y: 0, z: 0}
+  anchor2: {x: 0, y: 10, z: 0}
+  anchor3: {x: 20, y: 10, z: 0}
+  anchor4: {x: 20, y: 0, z: 0}
   fieldCreated: 0
   goalZoneHandler: {fileID: 1114001383}
 --- !u!33 &194931128
@@ -305,7 +304,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 500
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -569,7 +568,7 @@ GameObject:
   - component: {fileID: 846146056}
   m_Layer: 0
   m_Name: PlayingFieldContainer
-  m_TagString: PlayingField
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -634,7 +633,7 @@ MonoBehaviour:
   playerCount: 4
   teamCount: 2
   playerPositions: []
-  ballPosition: {x: 0, y: 0, z: 0}
+  ballPosition: {x: 0, y: 0}
   playingField: {fileID: 846146055}
   team1Prefab: {fileID: 8638558989047265842, guid: 410c054a3556d5443a72aeda17474802,
     type: 3}
@@ -654,10 +653,6 @@ MonoBehaviour:
   goalZoneControllerScript: {fileID: 3120632891150843213, guid: 1e6aeaad79971f9498bc99b3d4bab495,
     type: 3}
   fieldGeneratorScript: {fileID: 0}
-  mainCamera: {fileID: 519420031}
-  distanceFromCamera: 1000
-  middleX: 0
-  middleY: 0
 --- !u!4 &859500852
 Transform:
   m_ObjectHideFlags: 0
@@ -736,6 +731,9 @@ MonoBehaviour:
   redGoal: {fileID: 1349755617}
   blueGoalMesh: {fileID: 684829591}
   redGoalMesh: {fileID: 1349755618}
+  goalScored: 0
+  centerOfBlueGoal: {x: 0, y: 0}
+  centerOfRedGoal: {x: 0, y: 0}
 --- !u!4 &1114001385
 Transform:
   m_ObjectHideFlags: 0

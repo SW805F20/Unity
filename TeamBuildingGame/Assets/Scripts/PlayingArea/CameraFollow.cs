@@ -4,9 +4,13 @@ public class CameraFollow : MonoBehaviour
 {
     public Camera mainCamera;
     private Vector3 newPosition;
-    private readonly int distanceFromCamera = 1000;
+    private readonly int distanceFromCamera = 10;
 
-    UDPClient clientData;
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
 
     // Update is called once per frame
     void Update()

@@ -8,16 +8,7 @@ public class PlayingFieldOffset : MonoBehaviour
     private List<float> xAnchors = new List<float>();
     private List<float> yAnchors = new List<float>();
     private float xMax, yMax, xMiddle, yMiddle;
-    [SerializeField]
-    GameObject gameState;
-    GameStateHandler gameStateHandler;
 
-    UDPClient clientData;
-
-    void Awake()
-    {
-        gameStateHandler = gameState.GetComponent<GameStateHandler>();
-    }
     void Start()
     {
         // Since the playingfield is a mesh, it is drawn from the bottom left, rather than the center as regular shapes.
@@ -36,8 +27,6 @@ public class PlayingFieldOffset : MonoBehaviour
         yMax = yAnchors.Max();
         xMiddle = xMax / 2f;
         yMiddle = yMax / 2f;
-        gameStateHandler.middleX = (int)xMiddle;
-        gameStateHandler.middleY = (int)yMiddle;
 
         // Since meshes are drawn from the bottom left, the offset has to be the negative of the middle.
         transform.position = new Vector3(-xMiddle, -yMiddle, 0f);
