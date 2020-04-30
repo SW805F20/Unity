@@ -37,14 +37,13 @@ public class CameraFollow : MonoBehaviour
             {
                 fieldHeight = gameStateHandler.fieldGeneratorScript.anchor2.y - gameStateHandler.fieldGeneratorScript.anchor1.y;
                 fieldWidth = gameStateHandler.fieldGeneratorScript.anchor3.x - gameStateHandler.fieldGeneratorScript.anchor2.x;
-
-                Vector3 playingFieldCenterPos = new Vector3(gameStateHandler.playingField.transform.position.x, gameStateHandler.playingField.transform.position.y, 
-                    gameStateHandler.playingField.transform.position.z);
+                
+                Vector3 playingFieldCenterPos = new Vector3(gameStateHandler.playingFieldObject.transform.position.x, gameStateHandler.playingFieldObject.transform.position.y, 
+                    gameStateHandler.playingFieldObject.transform.position.z);
                 playingFieldCenterPos.y += fieldHeight / 2;
                 playingFieldCenterPos.x += fieldWidth / 2;
                 cameraRig.transform.position = playingFieldCenterPos;
                 playingFieldTransform.transform.localPosition = -playingFieldCenterPos;
-                
 
                 cameraCentered = true;
                 distanceFromCamera = fieldHeight * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
