@@ -11,7 +11,7 @@ public class TCPClient : MonoBehaviour
     GameObject gameState;
     GameStateHandler gameStateHandler;
     private TcpClient tcpClient;
-    private string ipAddress = "192.168.0.49"; // This ip must be the same as the one the server is running on
+    private string ipAddress = "192.168.0.89"; // This ip must be the same as the one the server is running on
     private int portNumber = 10000; // This port must be the same as the one the server is running on
 
     void Awake()
@@ -184,4 +184,3 @@ public class TCPClient : MonoBehaviour
     }
 
 }
-
