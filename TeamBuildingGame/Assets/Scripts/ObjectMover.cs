@@ -37,21 +37,17 @@ public class ObjectMover : MonoBehaviour
             {
                 gameStateHandler.players[i] = Instantiate(gameStateHandler.team2Prefab);
                 gameStateHandler.players[i].transform.SetParent(gameStateHandler.playingFieldObject.transform, false);
-
             }
         }
-        Debug.Log(gameStateHandler.players[1].transform.parent);
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        gameStateHandler.ball.transform.localPosition = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, -1); ;
+        gameStateHandler.ball.transform.localPosition = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, -1);
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
             gameStateHandler.players[i].transform.localPosition = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, -1);
         }
-        Debug.Log(gameStateHandler.players[0].transform.position);
     }
 }

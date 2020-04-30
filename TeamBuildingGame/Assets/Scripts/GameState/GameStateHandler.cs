@@ -8,7 +8,7 @@ public class GameStateHandler : MonoBehaviour
     public int teamCount = 2;
     public Vector2[] playerPositions;
     public Vector2 ballPosition;
-    public GameObject playingField;
+    public GameObject playingFieldContainer;
     public GameObject playingFieldObject;
     public GameObject team1Prefab;
     public GameObject team2Prefab;
