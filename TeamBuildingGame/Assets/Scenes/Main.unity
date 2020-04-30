@@ -635,7 +635,8 @@ MonoBehaviour:
   teamCount: 2
   playerPositions: []
   ballPosition: {x: 0, y: 0}
-  playingField: {fileID: 846146055}
+  playingFieldContainer: {fileID: 846146055}
+  playingFieldObject: {fileID: 194931124}
   team1Prefab: {fileID: 8638558989047265842, guid: 410c054a3556d5443a72aeda17474802,
     type: 3}
   team2Prefab: {fileID: 5303904888618101902, guid: 4559fe7154b30064aa495e72636f8966,
@@ -732,9 +733,6 @@ MonoBehaviour:
   redGoal: {fileID: 1349755617}
   blueGoalMesh: {fileID: 684829591}
   redGoalMesh: {fileID: 1349755618}
-  goalScored: 0
-  centerOfBlueGoal: {x: 0, y: 0}
-  centerOfRedGoal: {x: 0, y: 0}
 --- !u!4 &1114001385
 Transform:
   m_ObjectHideFlags: 0
