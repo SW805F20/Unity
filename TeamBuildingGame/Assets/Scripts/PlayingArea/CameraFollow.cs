@@ -32,8 +32,11 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(gameStateHandler.fieldGeneratorScript.fieldCreated)
+        // The camera should only follow once the field has been created
+        if (gameStateHandler.fieldGeneratorScript.fieldCreated)
         {
+            // These calculations should only be done once
+            // It sets the camera to the center of the field and moves the field far enough away from the camera so it can be seen
             if (!cameraCentered)
             {
                 fieldHeight = gameStateHandler.fieldGeneratorScript.anchor2.y - gameStateHandler.fieldGeneratorScript.anchor1.y;
@@ -50,6 +53,7 @@ public class CameraFollow : MonoBehaviour
                 float size;
                 size = fieldHeight > fieldWidth ? fieldHeight : fieldWidth;
                 distanceFromCamera = size * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                mainCamera.farClipPlane += distanceFromCamera;
             }
 
 
@@ -58,7 +62,7 @@ public class CameraFollow : MonoBehaviour
             // Distance from camera pushes the playingfield further away from the origin of the camera.
             // The rotation is also updated to ensure the view is straight on.
 
-            newPosition = playingFieldTransform.transform.position + playingFieldTransform.transform.forward * (distanceFromCamera * 1.69f);
+            newPosition = playingFieldTransform.transform.position + playingFieldTransform.transform.forward * distanceFromCamera;
             transform.position = newPosition;
             transform.rotation = mainCamera.transform.localRotation; 
         }
