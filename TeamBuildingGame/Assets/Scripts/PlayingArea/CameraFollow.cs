@@ -23,6 +23,7 @@ public class CameraFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UnityEngine.XR.XRSettings.enabled = true;
         mainCamera.orthographic = false;
         playingFieldTransform = new GameObject("PlayingFieldTransform");
         playingFieldTransform.transform.SetParent(mainCamera.transform);
@@ -46,8 +47,9 @@ public class CameraFollow : MonoBehaviour
                 playingFieldTransform.transform.localPosition = -playingFieldCenterPos;
 
                 cameraCentered = true;
-                distanceFromCamera = fieldHeight * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-
+                float size;
+                size = fieldHeight > fieldWidth ? fieldHeight : fieldWidth;
+                distanceFromCamera = size * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
             }
 
 
@@ -56,7 +58,7 @@ public class CameraFollow : MonoBehaviour
             // Distance from camera pushes the playingfield further away from the origin of the camera.
             // The rotation is also updated to ensure the view is straight on.
 
-            newPosition = playingFieldTransform.transform.position + playingFieldTransform.transform.forward * distanceFromCamera;
+            newPosition = playingFieldTransform.transform.position + playingFieldTransform.transform.forward * (distanceFromCamera * 1.69f);
             transform.position = newPosition;
             transform.rotation = mainCamera.transform.localRotation; 
         }
