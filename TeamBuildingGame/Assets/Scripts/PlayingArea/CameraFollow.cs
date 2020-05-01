@@ -15,7 +15,7 @@ public class CameraFollow : MonoBehaviour
     private GameObject playingFieldTransform;
 
 
-    private void Awake()
+    void Awake()
     {
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
         cameraRig = GameObject.Find("Camera Rig");
