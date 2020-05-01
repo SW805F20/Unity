@@ -20,4 +20,6 @@ public class GameStateHandler : MonoBehaviour
     public Vector2[] goalPositions;
     public GoalZoneController goalZoneControllerScript;
     public FieldGenerator fieldGeneratorScript;
+    public byte team1Score = 0;
+    public byte team2Score = 0;
 }

@@ -115,6 +115,9 @@ public class TCPClient : MonoBehaviour
                 case 3:
                     HandleGameStart(data);
                     break;
+                case 4:
+                    GoalScoredHandler(data);
+                    break;
                 case 5:
                     GoalPositionHandler(data);
                     break;
@@ -126,6 +129,13 @@ public class TCPClient : MonoBehaviour
         }
         
 
+    }
+    private void GoalScoredHandler(long data)
+    {
+        byte team1Score = (byte)(data >> 8);
+        byte team2Score = (byte)(data >> 16);
+        gameStateHandler.team1Score = team1Score;
+        gameStateHandler.team2Score = team2Score;
     }
 
     private void HandleGameStart(long data)
