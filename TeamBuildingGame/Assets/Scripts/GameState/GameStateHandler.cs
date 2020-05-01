@@ -7,6 +7,7 @@ public class GameStateHandler : MonoBehaviour
     public int playerCount;
     public int teamCount = 2;
     public Vector2[] playerPositions;
+    public Vector3 anchor1, anchor2, anchor3, anchor4;
     public Vector2 ballPosition;
     public GameObject playingFieldContainer;
     public GameObject playingFieldObject;

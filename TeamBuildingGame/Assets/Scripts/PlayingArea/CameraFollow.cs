@@ -36,8 +36,8 @@ public class CameraFollow : MonoBehaviour
         {
             if (!cameraCentered)
             {
-                fieldHeight = gameStateHandler.fieldGeneratorScript.anchor2.y - gameStateHandler.fieldGeneratorScript.anchor1.y;
-                fieldWidth = gameStateHandler.fieldGeneratorScript.anchor3.x - gameStateHandler.fieldGeneratorScript.anchor2.x;
+                fieldHeight = gameStateHandler.anchor2.y - gameStateHandler.anchor1.y;
+                fieldWidth = gameStateHandler.anchor3.x - gameStateHandler.anchor2.x;
                 
                 Vector3 playingFieldCenterPos = new Vector3(gameStateHandler.playingFieldObject.transform.position.x, gameStateHandler.playingFieldObject.transform.position.y, 
                     gameStateHandler.playingFieldObject.transform.position.z);

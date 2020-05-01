@@ -1,28 +1,34 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using UnityEngine.SceneManagement;
 
-public class TCPClient : MonoBehaviour
+public class LobbyTCPClient : MonoBehaviour
 {
-    [SerializeField]
-    GameObject gameState;
     GameStateHandler gameStateHandler;
     private TcpClient tcpClient;
+    ConnectionHandler connectionHandler;
+    bool connected = false;
 
     void Awake()
     {
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
-        ConnectionHandler connectionHandler = GameObject.FindGameObjectWithTag("ConnectionHandler").GetComponent<ConnectionHandler>();
+        connectionHandler = GameObject.FindGameObjectWithTag("ConnectionHandler").GetComponent<ConnectionHandler>();
+    }
+
+    public void CreateConnection(){
         try
         {
             // Establishes a tcp connection on the port.
             tcpClient = new TcpClient(connectionHandler.tcpIPAddr, connectionHandler.tcpPort);
 
-            if (tcpClient.Connected)
+            if (tcpClient.Connected) {
                 Console.WriteLine("Connected to: {0}:{1}", connectionHandler.tcpIPAddr, connectionHandler.tcpPort);
+                connected = true;
+            }
         }
         catch (Exception ex)
         {
@@ -33,28 +39,17 @@ public class TCPClient : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameStateHandler.goalPositions = new Vector2[2];
-        gameStateHandler.goalZoneControllerScript = gameStateHandler.GoalZoneController.GetComponent<GoalZoneController>();
-        gameStateHandler.fieldGeneratorScript = gameStateHandler.playingFieldContainer.GetComponentInChildren<FieldGenerator>();
 
-        StartListening();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(tcpClient.GetStream().DataAvailable)
+        if(connected && tcpClient.GetStream().DataAvailable)
         {
             StartListening();
         }
     }
-
-    void OnDestroy()
-    {
-        // Ensures connection is closed when the game object it is attached to is destroyed, so it wont continue to receive messages after the game ends.
-        tcpClient.Close();
-    }
-
 
     private void StartListening()
     {
@@ -123,13 +118,13 @@ public class TCPClient : MonoBehaviour
         {
             Debug.LogError("Network data could not be parsed");
         }
-        
-
     }
 
     private void HandleGameStart(long data)
     {
-        throw new NotImplementedException();
+        Debug.Log("LOADING SCENE!");
+        SceneManager.LoadSceneAsync("Main", LoadSceneMode.Single);
+        Debug.Log("SCENE LOADED!");
     }
 
     private void PlayerTagHandler(long data)
@@ -163,7 +158,7 @@ public class TCPClient : MonoBehaviour
                 gameStateHandler.anchor4.x = x;
                 gameStateHandler.anchor4.y = y;
                 // We have received all anchors and can render the playing field
-                gameStateHandler.fieldGeneratorScript.CreatePlayingField();
+                // gameStateHandler.fieldGeneratorScript.CreatePlayingField();
                 break;
         }
     }
@@ -179,7 +174,7 @@ public class TCPClient : MonoBehaviour
         ushort y = (ushort)(data >> 32);
         byte goalZoneCenterOffset = (byte)(data >> 48);
 
-        gameStateHandler.goalZoneControllerScript.SpawnGoal(new Vector2(x, y), goalZoneCenterOffset, teamId);
+        // gameStateHandler.goalZoneControllerScript.SpawnGoal(new Vector2(x, y), goalZoneCenterOffset, teamId);
     }
 
 }

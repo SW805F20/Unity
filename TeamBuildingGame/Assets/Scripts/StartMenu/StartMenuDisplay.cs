@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System;
-using UnityEngine.SceneManagement;
 
 
 public class StartMenuDisplay : MonoBehaviour
@@ -45,9 +44,9 @@ public class StartMenuDisplay : MonoBehaviour
             inputField.gameObject.SetActive(false);
             connectionText.text = $"Connected to host with IP {connectionHandler.tcpIPAddr} \n (1 of 4 players connected)";
             playersConnected.SetActive(true);
-        }
 
-        SceneManager.LoadScene("Main");
+            connectionHandler.GetComponent<LobbyTCPClient>().CreateConnection();
+        }
     }
 
     public void CancelConnection()

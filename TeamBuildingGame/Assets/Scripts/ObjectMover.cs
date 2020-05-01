@@ -5,15 +5,12 @@ using UnityEngine;
 public class ObjectMover : MonoBehaviour
 {
     GameObject client;
-
-    [SerializeField]
-    GameObject gameState;
     GameStateHandler gameStateHandler;
 
     UDPClient clientData;
 
     void Awake() {
-        gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
+        gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
     }
 
     // Start is called before the first frame update
