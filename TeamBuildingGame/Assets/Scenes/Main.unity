@@ -181,10 +181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44252b2043f9f5419b3faf7cef6d7d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anchor1: {x: 0, y: 0, z: 0}
-  anchor2: {x: 0, y: 10, z: 0}
-  anchor3: {x: 20, y: 10, z: 0}
-  anchor4: {x: 20, y: 0, z: 0}
   fieldCreated: 0
   goalZoneHandler: {fileID: 1114001383}
 --- !u!33 &194931128
@@ -403,7 +399,6 @@ GameObject:
   - component: {fileID: 651394925}
   - component: {fileID: 651394924}
   - component: {fileID: 651394926}
-  - component: {fileID: 651394927}
   m_Layer: 0
   m_Name: CLIENT
   m_TagString: Untagged
@@ -450,20 +445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c74786b24eb785e4994dc67b2b1134f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameState: {fileID: 859500850}
---- !u!114 &651394927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 651394923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7291273118f09ea43b049a4972ee7220, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameState: {fileID: 859500850}
 --- !u!1 &684829590
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,7 +594,7 @@ GameObject:
   - component: {fileID: 859500852}
   - component: {fileID: 859500851}
   m_Layer: 0
-  m_Name: GameState
+  m_Name: GameStateOld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -634,6 +615,10 @@ MonoBehaviour:
   playerCount: 4
   teamCount: 2
   playerPositions: []
+  anchor1: {x: 0, y: 0, z: 0}
+  anchor2: {x: 0, y: 0, z: 0}
+  anchor3: {x: 0, y: 0, z: 0}
+  anchor4: {x: 0, y: 0, z: 0}
   ballPosition: {x: 0, y: 0}
   playingFieldContainer: {fileID: 846146055}
   playingFieldObject: {fileID: 194931124}
@@ -651,7 +636,9 @@ MonoBehaviour:
   - {fileID: 0}
   goalSize: 0
   GoalZoneController: {fileID: 1114001383}
-  goalPositions: []
+  redGoal: {x: 0, y: 0}
+  blueGoal: {x: 0, y: 0}
+  goalCenterOffset: 0
   goalZoneControllerScript: {fileID: 3120632891150843213, guid: 1e6aeaad79971f9498bc99b3d4bab495,
     type: 3}
   fieldGeneratorScript: {fileID: 0}
