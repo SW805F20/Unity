@@ -11,19 +11,18 @@ public class TCPClient : MonoBehaviour
     GameObject gameState;
     GameStateHandler gameStateHandler;
     private TcpClient tcpClient;
-    private string ipAddress = "192.168.0.49"; // This ip must be the same as the one the server is running on
-    private int portNumber = 10000; // This port must be the same as the one the server is running on
 
     void Awake()
     {
         gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
+        ConnectionHandler connectionHandler = GameObject.FindGameObjectWithTag("ConnectionHandler").GetComponent<ConnectionHandler>();
         try
         {
             // Establishes a tcp connection on the port.
-            tcpClient = new TcpClient(ipAddress, portNumber);
+            tcpClient = new TcpClient(connectionHandler.tcpIPAddr, connectionHandler.tcpPort);
 
             if (tcpClient.Connected)
-                Console.WriteLine("Connected to: {0}:{1}", ipAddress, portNumber);
+                Console.WriteLine("Connected to: {0}:{1}", connectionHandler.tcpIPAddr, connectionHandler.tcpPort);
         }
         catch (Exception ex)
         {
