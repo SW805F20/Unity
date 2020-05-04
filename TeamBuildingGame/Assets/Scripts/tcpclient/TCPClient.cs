@@ -30,7 +30,6 @@ public class TCPClient : MonoBehaviour
 
             if (tcpClient.Connected)
             {
-                Console.WriteLine("Connected to: {0}:{1}", connectionHandler.tcpIPAddr, connectionHandler.tcpPort);
                 connected = true;
                 return true;
             }
