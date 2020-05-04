@@ -18,7 +18,9 @@ public class GameStateHandler : MonoBehaviour
     public GameObject[] players;
     public int goalSize;
     public GameObject GoalZoneController;
-    public Vector2[] goalPositions;
+    public Vector2 redGoal;
+    public Vector2 blueGoal;
+    public int goalCenterOffset;
     public GoalZoneController goalZoneControllerScript;
     public FieldGenerator fieldGeneratorScript;
 }

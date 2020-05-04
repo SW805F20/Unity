@@ -14,6 +14,8 @@ public class FieldGenerator : MonoBehaviour
     void Awake(){
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
         mesh = GetComponent<MeshFilter>().mesh;
+        gameStateHandler.fieldGeneratorScript = gameObject.GetComponent<FieldGenerator>();
+        CreatePlayingField();
     }
 
     public void CreatePlayingField(){

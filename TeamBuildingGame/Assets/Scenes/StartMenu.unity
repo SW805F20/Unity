@@ -208,9 +208,10 @@ GameObject:
   m_Component:
   - component: {fileID: 173963107}
   - component: {fileID: 173963108}
+  - component: {fileID: 173963109}
   m_Layer: 0
   m_Name: GameState
-  m_TagString: Untagged
+  m_TagString: ConnectionHandler
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -241,22 +242,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cec35adbc5886b439243a305cffd665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCount: 0
+  playerCount: 4
   teamCount: 2
   playerPositions: []
+  anchor1: {x: 0, y: 0, z: 0}
+  anchor2: {x: 0, y: 0, z: 0}
+  anchor3: {x: 0, y: 0, z: 0}
+  anchor4: {x: 0, y: 0, z: 0}
   ballPosition: {x: 0, y: 0}
   playingFieldContainer: {fileID: 0}
   playingFieldObject: {fileID: 0}
-  team1Prefab: {fileID: 0}
-  team2Prefab: {fileID: 0}
-  ballPrefab: {fileID: 0}
+  team1Prefab: {fileID: 8638558989047265842, guid: 410c054a3556d5443a72aeda17474802,
+    type: 3}
+  team2Prefab: {fileID: 5303904888618101902, guid: 4559fe7154b30064aa495e72636f8966,
+    type: 3}
+  ballPrefab: {fileID: 3798980781739851276, guid: 278edf1dcc73ec14fb2b16442bcef33e,
+    type: 3}
   ball: {fileID: 0}
-  players: []
+  players:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   goalSize: 0
   GoalZoneController: {fileID: 0}
-  goalPositions: []
+  redGoal: {x: 0, y: 0}
+  blueGoal: {x: 0, y: 0}
+  goalCenterOffset: 0
   goalZoneControllerScript: {fileID: 0}
   fieldGeneratorScript: {fileID: 0}
+--- !u!114 &173963109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173963106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c779e933a6406ec42a556cb909438c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &418147568
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,7 +1348,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1990812087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a887ce803bdd44478dd7b4d197af393, type: 3}
+  m_Script: {fileID: 11500000, guid: 7291273118f09ea43b049a4972ee7220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 173963106}

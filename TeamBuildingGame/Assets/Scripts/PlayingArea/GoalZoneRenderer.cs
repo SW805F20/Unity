@@ -8,16 +8,6 @@ public class GoalZoneRenderer : MonoBehaviour
     Vector3[] vertices;
     int[] triangles;
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-        
-    }
-
     /// <summary>This method uses the anchor positions to draw the goalzone based on triangles.</summary>
     /// <param name="corners">All corners of the goal zone.</param>
     public void MakeMeshData(Vector3[] corners)
