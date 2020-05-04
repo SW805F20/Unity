@@ -128,7 +128,6 @@ public class TCPClient : MonoBehaviour
 
     private void HandleGameStart()
     {
-        Debug.Log("LOADING SCENE!");
         SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
 
@@ -162,7 +161,6 @@ public class TCPClient : MonoBehaviour
             case 4:
                 gameStateHandler.anchor4.x = x;
                 gameStateHandler.anchor4.y = y;
-                // We have received all anchors and can render the playing field
                 break;
         }
     }
