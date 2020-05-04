@@ -42,10 +42,19 @@ public class StartMenuDisplay : MonoBehaviour
         {
             connectionHandler.tcpIPAddr = inputField.text;
             inputField.gameObject.SetActive(false);
-            connectionText.text = $"Connected to host with IP {connectionHandler.tcpIPAddr} \n (Waiting for other players to connect)";
+            bool result = connectionHandler.GetComponent<TCPClient>().CreateConnection();
+
+            if(result)
+            {
+                connectionText.text = $"Connected to host with IP {connectionHandler.tcpIPAddr} \n (Waiting for other players to connect)";
+            }
+            else
+            {
+                connectionText.text = $"No game is being hosted on IP: {connectionHandler.tcpIPAddr}";
+            }
             playersConnected.SetActive(true);
 
-            connectionHandler.GetComponent<TCPClient>().CreateConnection();
+
         }
     }
 

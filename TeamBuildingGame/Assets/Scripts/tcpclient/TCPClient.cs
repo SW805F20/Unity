@@ -21,7 +21,7 @@ public class TCPClient : MonoBehaviour
         connectionHandler = GameObject.Find("ConnectionHandler").GetComponent<ConnectionHandler>();
     }
 
-    public void CreateConnection()
+    public bool CreateConnection()
     {
         try
         {
@@ -32,12 +32,14 @@ public class TCPClient : MonoBehaviour
             {
                 Console.WriteLine("Connected to: {0}:{1}", connectionHandler.tcpIPAddr, connectionHandler.tcpPort);
                 connected = true;
+                return true;
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Debug.LogError(ex.Message);
         }
+        return false;
     }
 
     // Update is called once per frame
