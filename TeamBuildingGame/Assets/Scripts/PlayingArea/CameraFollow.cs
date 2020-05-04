@@ -15,7 +15,7 @@ public class CameraFollow : MonoBehaviour
     private GameObject playingFieldTransform;
 
 
-    private void Awake()
+    void Awake()
     {
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
         cameraRig = GameObject.Find("Camera Rig");
@@ -32,12 +32,15 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // The camera should only follow once the field has been created
         if(gameStateHandler.fieldGeneratorScript.fieldCreated)
         {
-            if (!cameraCentered)
+            // These calculations should only be done once
+            // It sets the camera to the center of the field and moves the field far enough away from the camera so it can be seen
+            if(!cameraCentered)
             {
-                fieldHeight = gameStateHandler.anchor2.y - gameStateHandler.anchor1.y;
-                fieldWidth = gameStateHandler.anchor3.x - gameStateHandler.anchor2.x;
+                fieldHeight = gameStateHandler.fieldGeneratorScript.anchor2.y - gameStateHandler.fieldGeneratorScript.anchor1.y;
+                fieldWidth = gameStateHandler.fieldGeneratorScript.anchor3.x - gameStateHandler.fieldGeneratorScript.anchor2.x;
                 
                 Vector3 playingFieldCenterPos = new Vector3(gameStateHandler.playingFieldObject.transform.position.x, gameStateHandler.playingFieldObject.transform.position.y, 
                     gameStateHandler.playingFieldObject.transform.position.z);
@@ -49,7 +52,8 @@ public class CameraFollow : MonoBehaviour
                 cameraCentered = true;
                 float size;
                 size = fieldHeight > fieldWidth ? fieldHeight : fieldWidth;
-                distanceFromCamera = size * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                distanceFromCamera = 1.2f * size * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                mainCamera.farClipPlane += distanceFromCamera;
             }
 
 
@@ -58,7 +62,7 @@ public class CameraFollow : MonoBehaviour
             // Distance from camera pushes the playingfield further away from the origin of the camera.
             // The rotation is also updated to ensure the view is straight on.
 
-            newPosition = playingFieldTransform.transform.position + playingFieldTransform.transform.forward * (distanceFromCamera * 1.69f);
+            newPosition = playingFieldTransform.transform.position + playingFieldTransform.transform.forward * distanceFromCamera;
             transform.position = newPosition;
             transform.rotation = mainCamera.transform.localRotation; 
         }
