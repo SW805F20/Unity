@@ -28,7 +28,7 @@ public class FieldGenerator : MonoBehaviour
     }
     private void FieldCreatedEventHandler()
     {
-        OnFieldCreated?.Invoke(anchor1, anchor2, anchor3, anchor4);
+        OnFieldCreated?.Invoke(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
     }
 
     private void Update()
