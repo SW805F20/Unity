@@ -30,7 +30,7 @@ public class GoalUiRenderer : MonoBehaviour
         _fieldGen = gameStateHandler.playingFieldObject.GetComponent<FieldGenerator>();
         _rectTransform = GetComponent<RectTransform>();
         _fieldGen.OnFieldCreated += OnFieldCreated;
-        _tcpclient = GameObject.Find("Client").GetComponent<TCPClient>();
+        _tcpclient = GameObject.Find("CLIENT").GetComponent<TCPClient>();
         _tcpclient.OnGoalScored += UpdateGoalScore;
         if (isVertical)
         {
