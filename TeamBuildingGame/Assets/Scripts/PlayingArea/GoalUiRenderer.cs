@@ -6,9 +6,7 @@ using UnityEngine.UI;
 
 public class GoalUiRenderer : MonoBehaviour
 {
-    [SerializeField]
-    GameObject gameState;
-    GameStateHandler gameStateHandler;
+    public GameStateHandler gameStateHandler;
     private RectTransform _rectTransform;
     private FieldGenerator _fieldGen;
     bool isVertical = false;
@@ -26,22 +24,15 @@ public class GoalUiRenderer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameStateHandler = gameState.GetComponent<GameStateHandler>();
+        gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
         _fieldGen = gameStateHandler.playingFieldObject.GetComponent<FieldGenerator>();
         _rectTransform = GetComponent<RectTransform>();
         _fieldGen.OnFieldCreated += OnFieldCreated;
         _tcpclient = GameObject.Find("ConnectionHandler").GetComponent<TCPClient>();
         _tcpclient.OnGoalScored += UpdateGoalScore;
-        if (isVertical)
-        {
-            verticalGoalContainer.SetActive(true);
-            GetTeamScoreComponents(verticalGoalContainer);
-        }
-        else
-        {
-            horizontalGoalContainer.SetActive(true);
-            GetTeamScoreComponents(horizontalGoalContainer);
-        }
+
+        OnFieldCreated(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
+
     }
 
     void GetTeamScoreComponents(GameObject container)
@@ -71,6 +62,20 @@ public class GoalUiRenderer : MonoBehaviour
         {
             isVertical = true;
         }
+
+        if (isVertical)
+        {
+            verticalGoalContainer.SetActive(true);
+            GetTeamScoreComponents(verticalGoalContainer);
+        }
+        else
+        {
+            horizontalGoalContainer.SetActive(true);
+            GetTeamScoreComponents(horizontalGoalContainer);
+        }
+
+        Debug.Log(height);
+        Debug.Log(width);
 
 
 
