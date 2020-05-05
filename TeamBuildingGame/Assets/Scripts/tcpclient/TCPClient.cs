@@ -5,15 +5,20 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TCPClient : MonoBehaviour
 {
     [SerializeField]
     GameObject gameState;
+    [SerializeField]
+    Text startMenuText;
+
     GameStateHandler gameStateHandler;
     private TcpClient tcpClient;
     ConnectionHandler connectionHandler;
     bool connected = false;
+
 
     void Awake()
     {
@@ -132,8 +137,13 @@ public class TCPClient : MonoBehaviour
 
     private void PlayerTagHandler(long data)
     {
-        ushort tag_id = (ushort)(data >> 16);
+        string tag_id = "0x" + Convert.ToString((ushort)(data >> 8), 16);
         byte player_id = (byte)(data >> 24);
+
+        gameStateHandler.myPlayerId = player_id;
+        gameStateHandler.myPlayerTag = tag_id;
+
+        startMenuText.text += $"\n\n Your tag is {gameStateHandler.myPlayerTag}";
 
     }
 

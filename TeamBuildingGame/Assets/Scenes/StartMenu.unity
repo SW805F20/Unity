@@ -194,6 +194,8 @@ MonoBehaviour:
   goalCenterOffset: 0
   goalZoneControllerScript: {fileID: 0}
   fieldGeneratorScript: {fileID: 0}
+  myPlayerId: 0
+  myPlayerTag: 
 --- !u!114 &173963109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +262,7 @@ MonoBehaviour:
   inputField: {fileID: 1533455712}
   playersConnected: {fileID: 476781333}
   display: {fileID: 418147568}
+  gameStateHandler: {fileID: 173963108}
   connectionHandlerObject: {fileID: 1990812087}
 --- !u!1 &476781333
 GameObject:
@@ -592,8 +595,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -58, y: 43}
-  m_SizeDelta: {x: 456.1, y: 54.7}
+  m_AnchoredPosition: {x: -46.9, y: 10.700001}
+  m_SizeDelta: {x: 494, y: 119.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1252019253
 MonoBehaviour:
@@ -626,7 +629,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\xC9nter an Ip address to connect"
+  m_Text: 
 --- !u!222 &1252019254
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -755,7 +758,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -71.999985, y: -12.799999}
+  m_AnchoredPosition: {x: -48, y: 0}
   m_SizeDelta: {x: 499.9, y: 60.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1533455710
@@ -1051,7 +1054,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -58, y: -74}
+  m_AnchoredPosition: {x: -46.899994, y: -74}
   m_SizeDelta: {x: 228.45, y: 50.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1758671092
@@ -1265,7 +1268,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
@@ -1352,6 +1355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 173963106}
+  startMenuText: {fileID: 1252019253}
 --- !u!1 &2073681196
 GameObject:
   m_ObjectHideFlags: 0
