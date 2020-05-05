@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System;
-using UnityEngine.SceneManagement;
 
 
 public class StartMenuDisplay : MonoBehaviour
@@ -43,11 +42,20 @@ public class StartMenuDisplay : MonoBehaviour
         {
             connectionHandler.tcpIPAddr = inputField.text;
             inputField.gameObject.SetActive(false);
-            connectionText.text = $"Connected to host with IP {connectionHandler.tcpIPAddr} \n (1 of 4 players connected)";
-            playersConnected.SetActive(true);
-        }
+            bool result = connectionHandler.GetComponent<TCPClient>().CreateConnection();
 
-        SceneManager.LoadScene("Main");
+            if(result)
+            {
+                connectionText.text = $"Connected to host with IP {connectionHandler.tcpIPAddr} \n (Waiting for other players to connect)";
+            }
+            else
+            {
+                connectionText.text = $"No game is being hosted on IP: {connectionHandler.tcpIPAddr}";
+            }
+            playersConnected.SetActive(true);
+
+
+        }
     }
 
     public void CancelConnection()

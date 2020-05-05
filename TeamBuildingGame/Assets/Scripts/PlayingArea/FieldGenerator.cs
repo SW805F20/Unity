@@ -8,13 +8,16 @@ public class FieldGenerator : MonoBehaviour
     Mesh mesh;
     Vector3[] vertices;
     int[] triangles;
-    public Vector3 anchor1, anchor2, anchor3, anchor4;
     public bool fieldCreated = false;
     public event FieldCreatedEvent OnFieldCreated;
     public GameObject goalZoneHandler;
+    GameStateHandler gameStateHandler;
 
     void Awake(){
+        gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
         mesh = GetComponent<MeshFilter>().mesh;
+        gameStateHandler.fieldGeneratorScript = gameObject.GetComponent<FieldGenerator>();
+        CreatePlayingField();
     }
 
     public void CreatePlayingField(){
@@ -41,7 +44,7 @@ public class FieldGenerator : MonoBehaviour
     /// </summary>
     void MakeMeshData(){
         // Define the four corners of the playing field, going in a clockwise direction.
-        vertices = new Vector3[]{ anchor1, anchor2, anchor3, anchor4 };
+        vertices = new Vector3[]{ gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4 };
         // Define how the triangles should be constructed for the mesh.
         // Should go from index 0 to 1 to 2 for first triangle and then
         // 2, 1, 3 for the second to construct a square.
@@ -65,10 +68,10 @@ public class FieldGenerator : MonoBehaviour
     void DefineUVs()
     {
         // This is necessary to make a mesh display an actual texture, otherwise it just displays a single color.
-        Vector2 corner1 = new Vector2(anchor1.x, anchor1.y);
-        Vector2 corner2 = new Vector2(anchor2.x, anchor2.y);
-        Vector2 corner3 = new Vector2(anchor3.x, anchor3.y);
-        Vector2 corner4 = new Vector2(anchor4.x, anchor4.y);
+        Vector2 corner1 = new Vector2(gameStateHandler.anchor1.x, gameStateHandler.anchor1.y);
+        Vector2 corner2 = new Vector2(gameStateHandler.anchor2.x, gameStateHandler.anchor2.y);
+        Vector2 corner3 = new Vector2(gameStateHandler.anchor3.x, gameStateHandler.anchor3.y);
+        Vector2 corner4 = new Vector2(gameStateHandler.anchor4.x, gameStateHandler.anchor4.y);
         Vector2[] uvs = new Vector2[4] { corner1, corner2, corner3, corner4};
 
         mesh.uv = uvs;

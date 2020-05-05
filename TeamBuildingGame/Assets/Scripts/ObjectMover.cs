@@ -5,15 +5,13 @@ using UnityEngine;
 public class ObjectMover : MonoBehaviour
 {
     GameObject client;
-
-    [SerializeField]
-    GameObject gameState;
     GameStateHandler gameStateHandler;
 
     UDPClient clientData;
 
     void Awake() {
-        gameStateHandler = gameState.GetComponent<GameStateHandler>(); 
+        gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
+        gameStateHandler.playingFieldObject = GameObject.Find("PlayingField");
     }
 
     // Start is called before the first frame update
@@ -44,10 +42,10 @@ public class ObjectMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameStateHandler.ball.transform.localPosition = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, -1);
+        gameStateHandler.ball.transform.localPosition = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, -6);
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
-            gameStateHandler.players[i].transform.localPosition = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, -1);
+            gameStateHandler.players[i].transform.localPosition = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, -6);
         }
     }
 }

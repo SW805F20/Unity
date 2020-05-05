@@ -8,6 +8,7 @@ public class GoalZoneController : MonoBehaviour
 
     public GameObject blueGoal, redGoal;
     public GoalZoneRenderer blueGoalMesh, redGoalMesh;
+    private GameStateHandler gameStateHandler;
 
     /// <summary> This method uses Unity's awake method to define starting requirements.
     ///    It gets the anchors from the playingField game object, and uses these to create arrays of their positions.
@@ -16,6 +17,10 @@ public class GoalZoneController : MonoBehaviour
     {
         blueGoalMesh = blueGoal.GetComponent<GoalZoneRenderer>();
         redGoalMesh = redGoal.GetComponent<GoalZoneRenderer>();
+        gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
+        gameStateHandler.goalZoneControllerScript = gameObject.GetComponent<GoalZoneController>();
+        SpawnGoal(gameStateHandler.blueGoal, gameStateHandler.goalCenterOffset, 0);
+        SpawnGoal(gameStateHandler.redGoal, gameStateHandler.goalCenterOffset, 1);
     }
 
     /// <summary>
