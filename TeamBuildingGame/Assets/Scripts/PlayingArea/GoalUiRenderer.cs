@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class GoalUiRenderer : MonoBehaviour
 {
@@ -11,10 +13,11 @@ public class GoalUiRenderer : MonoBehaviour
     private FieldGenerator _fieldGen;
 
     [SerializeField]
-    GameObject team1Score;
+    Text team1Score;
     [SerializeField]
-    GameObject team2Score;
+    Text team2Score;
 
+    private TCPClient _tcpclient;
 
 
     // Start is called before the first frame update
@@ -24,6 +27,8 @@ public class GoalUiRenderer : MonoBehaviour
         _fieldGen = gameStateHandler.playingFieldObject.GetComponent<FieldGenerator>();
         _rectTransform = GetComponent<RectTransform>();
         _fieldGen.OnFieldCreated += OnFieldCreated;
+        _tcpclient = GameObject.Find("Client").GetComponent<TCPClient>();
+        _tcpclient.OnGoalScored += UpdateGoalScore;
     }
 
     // Update is called once per frame
@@ -31,7 +36,7 @@ public class GoalUiRenderer : MonoBehaviour
     {
         
     }
-    void OnFieldCreated(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4)
+    private void OnFieldCreated(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4)
     {
         bool isVertical = false;
         float minx = Mathf.Min(anchor1.x, anchor2.x, anchor3.x, anchor4.x);
@@ -49,6 +54,12 @@ public class GoalUiRenderer : MonoBehaviour
         }
 
 
+
+    }
+    private void UpdateGoalScore()
+    {
+        team1Score.text = gameStateHandler.team1Score.ToString();
+        team2Score.text = gameStateHandler.team2Score.ToString();
 
     }
 }

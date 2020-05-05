@@ -5,12 +5,15 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 
+public delegate void GoalScoredEvent();
 public class TCPClient : MonoBehaviour
 {
     [SerializeField]
     GameObject gameState;
     GameStateHandler gameStateHandler;
     private TcpClient tcpClient;
+
+    public event GoalScoredEvent OnGoalScored;
 
     void Awake()
     {
@@ -135,6 +138,11 @@ public class TCPClient : MonoBehaviour
         byte team2Score = (byte)(data >> 16);
         gameStateHandler.team1Score = team1Score;
         gameStateHandler.team2Score = team2Score;
+        OnGoalScoredHandler();
+    }
+    private void OnGoalScoredHandler()
+    {
+        OnGoalScored?.Invoke();
     }
 
     private void HandleGameStart(long data)
