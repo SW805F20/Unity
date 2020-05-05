@@ -13,9 +13,7 @@ public class GoalUiRenderer : MonoBehaviour
     private FieldGenerator _fieldGen;
     bool isVertical = false;
 
-    [SerializeField]
     Text team1Score;
-    [SerializeField]
     Text team2Score;
     [SerializeField]
     GameObject verticalGoalContainer;
@@ -37,10 +35,19 @@ public class GoalUiRenderer : MonoBehaviour
         if (isVertical)
         {
             verticalGoalContainer.SetActive(true);
-        } else
+            GetTeamScoreComponents(verticalGoalContainer);
+        }
+        else
         {
             horizontalGoalContainer.SetActive(true);
+            GetTeamScoreComponents(horizontalGoalContainer);
         }
+    }
+
+    void GetTeamScoreComponents(GameObject container)
+    {
+        team1Score = container.transform.GetChild(0).GetComponent<Text>();
+        team2Score = container.transform.GetChild(1).GetComponent<Text>();
     }
 
     // Update is called once per frame

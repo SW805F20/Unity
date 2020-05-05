@@ -327,7 +327,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &475683611
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1271,7 +1271,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1561438641
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1370,7 +1370,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 388430017
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &1831978565
@@ -1407,8 +1407,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 859500850}
-  team1Score: {fileID: 0}
-  team2Score: {fileID: 0}
   verticalGoalContainer: {fileID: 475683610}
   horizontalGoalContainer: {fileID: 1561438640}
 --- !u!1001 &2132223998
