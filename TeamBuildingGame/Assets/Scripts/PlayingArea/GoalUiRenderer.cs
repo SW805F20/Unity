@@ -11,11 +11,16 @@ public class GoalUiRenderer : MonoBehaviour
     GameStateHandler gameStateHandler;
     private RectTransform _rectTransform;
     private FieldGenerator _fieldGen;
+    bool isVertical = false;
 
     [SerializeField]
     Text team1Score;
     [SerializeField]
     Text team2Score;
+    [SerializeField]
+    GameObject verticalGoalContainer;
+    [SerializeField]
+    GameObject horizontalGoalContainer;
 
     private TCPClient _tcpclient;
 
@@ -29,6 +34,13 @@ public class GoalUiRenderer : MonoBehaviour
         _fieldGen.OnFieldCreated += OnFieldCreated;
         _tcpclient = GameObject.Find("Client").GetComponent<TCPClient>();
         _tcpclient.OnGoalScored += UpdateGoalScore;
+        if (isVertical)
+        {
+            verticalGoalContainer.SetActive(true);
+        } else
+        {
+            horizontalGoalContainer.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -38,7 +50,7 @@ public class GoalUiRenderer : MonoBehaviour
     }
     private void OnFieldCreated(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4)
     {
-        bool isVertical = false;
+
         float minx = Mathf.Min(anchor1.x, anchor2.x, anchor3.x, anchor4.x);
         float miny = Mathf.Min(anchor1.y, anchor2.y, anchor3.y, anchor4.y);
 
