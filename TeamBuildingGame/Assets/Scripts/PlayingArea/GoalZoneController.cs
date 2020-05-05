@@ -19,10 +19,14 @@ public class GoalZoneController : MonoBehaviour
         redGoalMesh = redGoal.GetComponent<GoalZoneRenderer>();
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
         gameStateHandler.goalZoneControllerScript = gameObject.GetComponent<GoalZoneController>();
+        SpawnGoals();
+    }
+
+    public void SpawnGoals()
+    {
         SpawnGoal(gameStateHandler.blueGoal, gameStateHandler.goalCenterOffset, 0);
         SpawnGoal(gameStateHandler.redGoal, gameStateHandler.goalCenterOffset, 1);
     }
-
     /// <summary>
     /// Spawns the goals 
     /// </summary>

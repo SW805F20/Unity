@@ -194,7 +194,10 @@ public class TCPClient : MonoBehaviour
         {
             gameStateHandler.redGoal = new Vector2(x, y);
         }
-
+        if(gameStateHandler.goalZoneControllerScript)
+        {
+            gameStateHandler.goalZoneControllerScript.SpawnGoals();
+        }
     }
 
 }
