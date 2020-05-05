@@ -37,6 +37,7 @@ public class ObjectMover : MonoBehaviour
                 gameStateHandler.players[i].transform.SetParent(gameStateHandler.playingFieldObject.transform, false);
             }
         }
+        gameStateHandler.players[gameStateHandler.myPlayerId].GetComponentInChildren<SpriteRenderer>().color = new Color(255, 60, 60);
     }
 
     // Update is called once per frame
