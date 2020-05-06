@@ -12,6 +12,7 @@ public class StartMenuDisplay : MonoBehaviour
     public InputField inputField;
     public GameObject playersConnected;
     public GameObject display;
+    public GameStateHandler gameStateHandler;
 
     [SerializeField]
     private GameObject connectionHandlerObject;
