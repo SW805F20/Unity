@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ObjectMover : MonoBehaviour
 {
@@ -23,21 +25,39 @@ public class ObjectMover : MonoBehaviour
         gameStateHandler.ball = Instantiate(gameStateHandler.ballPrefab);
         gameStateHandler.ball.transform.SetParent(gameStateHandler.playingFieldObject.transform, false);
 
-        gameStateHandler.players = new GameObject[gameStateHandler.playerCount];
+        gameStateHandler.players = new List<GameObject>();
+        GameObject playerObject;
+   
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
             if (i < gameStateHandler.playerCount / 2)
             {
-                gameStateHandler.players[i] = Instantiate(gameStateHandler.team1Prefab);
-                gameStateHandler.players[i].transform.SetParent(gameStateHandler.playingFieldObject.transform, false);
+                playerObject = Instantiate(gameStateHandler.team1Prefab);
             }
             else
             {
-                gameStateHandler.players[i] = Instantiate(gameStateHandler.team2Prefab);
-                gameStateHandler.players[i].transform.SetParent(gameStateHandler.playingFieldObject.transform, false);
+                playerObject = Instantiate(gameStateHandler.team2Prefab);
             }
+            playerObject.name = "player" + i.ToString();
+            playerObject.transform.SetParent(gameStateHandler.playingFieldObject.transform, false);
+            gameStateHandler.players.Add(playerObject);
+
         }
-        gameStateHandler.players[gameStateHandler.myPlayerId].GetComponentInChildren<SpriteRenderer>().color = new Color(255, 60, 60);
+        // With Unity, each individual prefab instance must be colored
+        // If only one player is colored, multiple instance will get the color
+        // The client's player is colored red, the others white
+        foreach(var player in gameStateHandler.players)
+        {
+            if(player.name == "player" + (gameStateHandler.myPlayerId - 1).ToString())
+            {
+                player.GetComponent<SpriteRenderer>().color = Color.red;
+            }
+            else
+            {
+                player.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+
+        }
     }
 
     // Update is called once per frame

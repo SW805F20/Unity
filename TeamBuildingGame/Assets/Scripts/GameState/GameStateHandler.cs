@@ -15,7 +15,7 @@ public class GameStateHandler : MonoBehaviour
     public GameObject team2Prefab;
     public GameObject ballPrefab;
     public GameObject ball;
-    public GameObject[] players;
+    public List<GameObject> players;
     public int goalSize;
     public GameObject GoalZoneController;
     public Vector2 redGoal;
@@ -23,6 +23,6 @@ public class GameStateHandler : MonoBehaviour
     public int goalCenterOffset;
     public GoalZoneController goalZoneControllerScript;
     public FieldGenerator fieldGeneratorScript;
-    public byte myPlayerId;
+    public int myPlayerId;
     public string myPlayerTag;
 }
