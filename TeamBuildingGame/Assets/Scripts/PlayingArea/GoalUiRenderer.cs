@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class GoalUiRenderer : MonoBehaviour
 {
     public GameStateHandler gameStateHandler;
-    private RectTransform _rectTransform;
     private FieldGenerator _fieldGen;
     bool isVertical = false;
 
@@ -24,12 +23,12 @@ public class GoalUiRenderer : MonoBehaviour
     void Start()
     {
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
-        _fieldGen = gameStateHandler.playingFieldObject.GetComponent<FieldGenerator>();
-        _rectTransform = GetComponent<RectTransform>();
-        _fieldGen.OnFieldCreated += CreateField;
         _tcpclient = GameObject.Find("ConnectionHandler").GetComponent<TCPClient>();
         _tcpclient.OnGoalScored += UpdateGoalScore;
-
+        _fieldGen = gameStateHandler.playingFieldObject.GetComponent<FieldGenerator>();
+        
+        // CreateField is called from both the event and the start function because this class is not guaranteed to be instantiated after _fieldgen.
+        _fieldGen.OnFieldCreated += CreateField;
         CreateField(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
     }
 
