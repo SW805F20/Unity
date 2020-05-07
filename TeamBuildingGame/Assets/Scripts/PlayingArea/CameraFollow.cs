@@ -52,8 +52,11 @@ public class CameraFollow : MonoBehaviour
                 cameraCentered = true;
                 float size;
                 size = fieldHeight > fieldWidth ? fieldHeight : fieldWidth;
+
+                // 1.2 is an arbitrary constant to allow the whole field to be seen in VR
                 distanceFromCamera = 1.2f * size * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-                mainCamera.farClipPlane += distanceFromCamera;
+                // The far clipping plane is set to the fields distance from camera + 1 to get the field in the clipping view
+                mainCamera.farClipPlane = distanceFromCamera + 1;
             }
 
 
