@@ -22,6 +22,7 @@ public class TCPClient : MonoBehaviour
 
     public event GoalScoredEvent OnGoalScored;
 
+
     void Awake()
     {
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
