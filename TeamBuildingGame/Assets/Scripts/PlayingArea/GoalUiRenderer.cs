@@ -73,12 +73,6 @@ public class GoalUiRenderer : MonoBehaviour
             horizontalGoalContainer.SetActive(true);
             GetTeamScoreComponents(horizontalGoalContainer);
         }
-
-        Debug.Log(height);
-        Debug.Log(width);
-
-
-
     }
     private void UpdateGoalScore()
     {
