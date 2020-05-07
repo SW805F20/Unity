@@ -20,19 +20,17 @@ public class GoalUiRenderer : MonoBehaviour
 
     private TCPClient _tcpclient;
 
-
     // Start is called before the first frame update
     void Start()
     {
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
         _fieldGen = gameStateHandler.playingFieldObject.GetComponent<FieldGenerator>();
         _rectTransform = GetComponent<RectTransform>();
-        _fieldGen.OnFieldCreated += OnFieldCreated;
+        _fieldGen.OnFieldCreated += CreateField;
         _tcpclient = GameObject.Find("ConnectionHandler").GetComponent<TCPClient>();
         _tcpclient.OnGoalScored += UpdateGoalScore;
 
-        OnFieldCreated(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
-
+        CreateField(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
     }
 
     void GetTeamScoreComponents(GameObject container)
@@ -41,14 +39,8 @@ public class GoalUiRenderer : MonoBehaviour
         team2Score = container.transform.GetChild(1).GetComponent<Text>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CreateField(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4)
     {
-        
-    }
-    private void OnFieldCreated(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4)
-    {
-
         float minx = Mathf.Min(anchor1.x, anchor2.x, anchor3.x, anchor4.x);
         float miny = Mathf.Min(anchor1.y, anchor2.y, anchor3.y, anchor4.y);
 
@@ -78,6 +70,5 @@ public class GoalUiRenderer : MonoBehaviour
     {
         team1Score.text = gameStateHandler.team1Score.ToString();
         team2Score.text = gameStateHandler.team2Score.ToString();
-
     }
 }
