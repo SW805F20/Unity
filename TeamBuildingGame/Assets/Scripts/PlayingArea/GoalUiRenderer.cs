@@ -28,8 +28,8 @@ public class GoalUiRenderer : MonoBehaviour
         _fieldGen = gameStateHandler.playingFieldObject.GetComponent<FieldGenerator>();
         
         // CreateField is called from both the event and the start function because this class is not guaranteed to be instantiated after _fieldgen.
-        _fieldGen.OnFieldCreated += CreateField;
-        CreateField(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
+        _fieldGen.OnFieldCreated += RenderGoalScore;
+        RenderGoalScore(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
     }
 
     void GetTeamScoreComponents(GameObject container)
@@ -38,7 +38,7 @@ public class GoalUiRenderer : MonoBehaviour
         team2Score = container.transform.GetChild(1).GetComponent<Text>();
     }
 
-    private void CreateField(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4)
+    private void RenderGoalScore(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4)
     {
         float minx = Mathf.Min(anchor1.x, anchor2.x, anchor3.x, anchor4.x);
         float miny = Mathf.Min(anchor1.y, anchor2.y, anchor3.y, anchor4.y);
