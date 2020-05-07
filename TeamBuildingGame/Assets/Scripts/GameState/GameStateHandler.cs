@@ -23,6 +23,8 @@ public class GameStateHandler : MonoBehaviour
     public int goalCenterOffset;
     public GoalZoneController goalZoneControllerScript;
     public FieldGenerator fieldGeneratorScript;
+    public byte team1Score = 0;
+    public byte team2Score = 0;
     public int myPlayerId;
     public string myPlayerTag;
 }

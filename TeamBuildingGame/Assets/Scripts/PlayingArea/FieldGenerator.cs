@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+public delegate void FieldCreatedEvent(Vector3 anchor1, Vector3 anchor2, Vector3 anchor3, Vector3 anchor4);
+
 [RequireComponent(typeof(MeshFilter))]
 public class FieldGenerator : MonoBehaviour
 {
@@ -7,7 +9,7 @@ public class FieldGenerator : MonoBehaviour
     Vector3[] vertices;
     int[] triangles;
     public bool fieldCreated = false;
-
+    public event FieldCreatedEvent OnFieldCreated;
     public GameObject goalZoneHandler;
     GameStateHandler gameStateHandler;
 
@@ -22,6 +24,11 @@ public class FieldGenerator : MonoBehaviour
         MakeMeshData();
         CreateMesh();
         DefineUVs();
+        FieldCreatedEventHandler();
+    }
+    private void FieldCreatedEventHandler()
+    {
+        OnFieldCreated?.Invoke(gameStateHandler.anchor1, gameStateHandler.anchor2, gameStateHandler.anchor3, gameStateHandler.anchor4);
     }
 
     private void Update()
