@@ -128,6 +128,9 @@ public class TCPClient : MonoBehaviour
                 case 5:
                     GoalPositionHandler(data);
                     break;
+                case 6:
+                    PlayerAndGoalAmountHandler(data);
+                    break;
             }
         }
         else
@@ -216,6 +219,18 @@ public class TCPClient : MonoBehaviour
         {
             gameStateHandler.goalZoneControllerScript.SpawnGoals();
         }
+    }
+
+    /// <summary>
+    /// Defines the amount of players and goals needed to win.
+    /// </summary>
+    /// <param name="data">The datagram message in hex with the 0x removed</param>
+    private void PlayerAndGoalAmountHandler(long data)
+    {
+        byte goalAmount = (byte)(data >> 8);
+        byte playerAmount = (byte)(data >> 16);
+        gameStateHandler.playerCount = playerAmount;
+        gameStateHandler.goalsToWin = goalAmount;
     }
 
 }

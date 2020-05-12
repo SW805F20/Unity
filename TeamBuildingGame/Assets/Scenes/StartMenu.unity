@@ -165,7 +165,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cec35adbc5886b439243a305cffd665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCount: 4
+  playerCount: 0
+  goalsToWin: 0
   teamCount: 2
   playerPositions: []
   anchor1: {x: 0, y: 0, z: 0}
@@ -194,6 +195,8 @@ MonoBehaviour:
   goalCenterOffset: 0
   goalZoneControllerScript: {fileID: 0}
   fieldGeneratorScript: {fileID: 0}
+  team1Score: 0
+  team2Score: 0
   myPlayerId: 0
   myPlayerTag: 
 --- !u!114 &173963109

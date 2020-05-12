@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameStateHandler : MonoBehaviour
 {
-    public int playerCount;
+    public byte playerCount = 0;
+    public byte goalsToWin = 0;
     public int teamCount = 2;
     public Vector2[] playerPositions;
     public Vector3 anchor1, anchor2, anchor3, anchor4;
