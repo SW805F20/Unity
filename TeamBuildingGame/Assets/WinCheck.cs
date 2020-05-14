@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WinCheck : MonoBehaviour
 {
-    public bool stop = false;
+    public bool gameOver = false;
     GameStateHandler gameStateHandler;
     TCPClient _tcpclient;
     [SerializeField]
@@ -22,7 +22,7 @@ public class WinCheck : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!stop)
+        if (!gameOver)
         {
             IncrementScore();
         }
@@ -64,7 +64,7 @@ public class WinCheck : MonoBehaviour
         }
         if (gameStateHandler.team2Score == 100)
         {
-            stop = true;
+            gameOver = true;
         }   
     }
 }
