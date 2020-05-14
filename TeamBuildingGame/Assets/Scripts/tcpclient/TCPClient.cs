@@ -61,7 +61,13 @@ public class TCPClient : MonoBehaviour
     void OnDestroy()
     {
         // Ensures connection is closed when the game object it is attached to is destroyed, so it wont continue to receive messages after the game ends.
-        tcpClient.Close();
+        // The null check is needed for the destruction of new ddol objects when reloading the lobby scene.
+        // If we create a duplicate in that scene, and then destroy it, it will call this function and cause issues since the new duplicate does not have a connection.
+        // So, we only close the connection if it exists.
+        if (tcpClient != null)
+        {
+            tcpClient.Close();
+        }
     }
 
 
@@ -128,6 +134,12 @@ public class TCPClient : MonoBehaviour
                 case 5:
                     GoalPositionHandler(data);
                     break;
+                case 6:
+                    PlayerAndGoalAmountHandler(data);
+                    break;
+                case 7:
+                    StartCoroutine("HandleGameEnd");
+                    break;
             }
         }
         else
@@ -135,6 +147,20 @@ public class TCPClient : MonoBehaviour
             Debug.LogError("Network data could not be parsed");
         }
     }
+
+    /// <summary>
+    /// Handles the game end message. Finds the text on the scene through the parent, since Find() cannot find inactive objects.
+    /// It sets the text to show, then waits and finally loads the lobby.
+    /// </summary>
+    IEnumerator HandleGameEnd()
+    {
+        Text endGameText = GameObject.Find("EndTextHolder").transform.GetChild(0).GetComponent<Text>();
+        endGameText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3);
+        endGameText.gameObject.SetActive(false);
+        SceneManager.LoadScene("StartMenu");
+    }
+
     private void GoalScoredHandler(long data)
     {
         byte team1Score = (byte)(data >> 8);
@@ -216,6 +242,18 @@ public class TCPClient : MonoBehaviour
         {
             gameStateHandler.goalZoneControllerScript.SpawnGoals();
         }
+    }
+
+    /// <summary>
+    /// Defines the amount of players and goals needed to win.
+    /// </summary>
+    /// <param name="data">The datagram message in hex with the 0x removed</param>
+    private void PlayerAndGoalAmountHandler(long data)
+    {
+        byte goalAmount = (byte)(data >> 8);
+        byte playerAmount = (byte)(data >> 16);
+        gameStateHandler.playerCount = playerAmount;
+        gameStateHandler.goalsToWin = goalAmount;
     }
 
 }

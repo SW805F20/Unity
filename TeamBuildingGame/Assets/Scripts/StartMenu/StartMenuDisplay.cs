@@ -12,14 +12,25 @@ public class StartMenuDisplay : MonoBehaviour
     public InputField inputField;
     public GameObject playersConnected;
     public GameObject display;
-    public GameStateHandler gameStateHandler;
+
+    GameStateHandler gameStateHandler;
 
     [SerializeField]
     private GameObject connectionHandlerObject;
     ConnectionHandler connectionHandler;
 
+    bool isConnected = false;
+
     public void Awake(){
+        connectionHandlerObject = GameObject.Find("ConnectionHandler");
         connectionHandler = connectionHandlerObject.GetComponent<ConnectionHandler>();
+        gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
+        // If there is a tcpIPAddr, it means that the player has returned from a game that they were connected to.
+        // As such, they are already connected to a host.
+        if (connectionHandler.tcpIPAddr.Length > 1)
+        {
+            isConnected = true;
+        }
     }
 
     public void Start()
@@ -27,6 +38,15 @@ public class StartMenuDisplay : MonoBehaviour
         playersConnected.SetActive(false);
 
     }
+
+    public void Update()
+    {
+        if(isConnected)
+        {
+            ReturningFromGame();
+        }
+    }
+
     public void ConnectToHost()
     {
 
@@ -65,4 +85,17 @@ public class StartMenuDisplay : MonoBehaviour
         inputField.gameObject.SetActive(true);
         playersConnected.SetActive(false);
     }
+
+    /// <summary> 
+    /// When returning to the lobby after a game, the player needs to have the display showing that they are connected to a certain IP.
+    /// This function ensures the display shows the same as after a player initially connected to the IP.
+    /// </summary>
+    public void ReturningFromGame() {
+        inputField.gameObject.SetActive(false);
+        connectionText.text = $"Connected to host with IP {connectionHandler.tcpIPAddr} \n (Waiting for other players to connect)";
+        connectionText.text += $"\n\n Your tag is {gameStateHandler.myPlayerTag}";
+        playersConnected.SetActive(true);
+        isConnected = false;
+
+    } 
 }
