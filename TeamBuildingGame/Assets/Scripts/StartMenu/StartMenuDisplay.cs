@@ -19,7 +19,7 @@ public class StartMenuDisplay : MonoBehaviour
     private GameObject connectionHandlerObject;
     ConnectionHandler connectionHandler;
 
-    public bool isConnected = false;
+    bool isConnected = false;
 
     public void Awake(){
         connectionHandlerObject = GameObject.Find("ConnectionHandler");
