@@ -61,6 +61,9 @@ public class TCPClient : MonoBehaviour
     void OnDestroy()
     {
         // Ensures connection is closed when the game object it is attached to is destroyed, so it wont continue to receive messages after the game ends.
+        // The null check is needed for the destruction of new ddol objects when reloading the lobby scene.
+        // If we create a duplicate in that scene, and then destroy it, it will call this function and cause issues since the new duplicate does not have a connection.
+        // So, we only close the connection if it exists.
         if (tcpClient != null)
         {
             tcpClient.Close();

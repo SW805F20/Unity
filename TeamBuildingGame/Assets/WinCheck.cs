@@ -47,6 +47,7 @@ public class WinCheck : MonoBehaviour
         SceneManager.LoadScene("StartMenu");
     }
 
+    //This is just a pepega hardcoded thing for test. Will be removed before merge.
     void IncrementScore()
     {
         if(gameStateHandler.team2Score < 101)
