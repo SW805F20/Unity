@@ -10,6 +10,7 @@ public class WinCheck : MonoBehaviour
     TCPClient _tcpclient;
     [SerializeField]
     Text endGameText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +30,10 @@ public class WinCheck : MonoBehaviour
             CheckWinCondition();
     }
 
+    /// <summary>
+    /// Checks if either team has enough goals to win.
+    /// If someone has won, their goals are reset, and a delay starts before they return to the lobby.
+    /// </summary>
     private void CheckWinCondition()
     {
         if(gameStateHandler.team1Score == gameStateHandler.goalsToWin || gameStateHandler.team2Score == gameStateHandler.goalsToWin)
@@ -41,6 +46,9 @@ public class WinCheck : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Waits for x seconds then loads a scene.
+    /// </summary>
     IEnumerator NewGameDelay()
     {
         yield return new WaitForSeconds(3);
@@ -57,8 +65,6 @@ public class WinCheck : MonoBehaviour
         if (gameStateHandler.team2Score == 100)
         {
             stop = true;
-        }
-        
-
+        }   
     }
 }
