@@ -137,6 +137,9 @@ public class TCPClient : MonoBehaviour
                 case 6:
                     PlayerAndGoalAmountHandler(data);
                     break;
+                case 7:
+                    StartCoroutine("HandleGameEnd");
+                    break;
             }
         }
         else
@@ -144,6 +147,20 @@ public class TCPClient : MonoBehaviour
             Debug.LogError("Network data could not be parsed");
         }
     }
+
+    /// <summary>
+    /// Handles the game end message. Finds the text on the scene through the parent, since Find() cannot find inactive objects.
+    /// It sets the text to show, then waits and finally loads the lobby.
+    /// </summary>
+    IEnumerator HandleGameEnd()
+    {
+        Text endGameText = GameObject.Find("EndTextHolder").transform.GetChild(0).GetComponent<Text>();
+        endGameText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3);
+        endGameText.gameObject.SetActive(false);
+        SceneManager.LoadScene("StartMenu");
+    }
+
     private void GoalScoredHandler(long data)
     {
         byte team1Score = (byte)(data >> 8);
