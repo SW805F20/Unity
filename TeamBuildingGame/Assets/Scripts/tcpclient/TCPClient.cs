@@ -61,7 +61,10 @@ public class TCPClient : MonoBehaviour
     void OnDestroy()
     {
         // Ensures connection is closed when the game object it is attached to is destroyed, so it wont continue to receive messages after the game ends.
-        tcpClient.Close();
+        if (tcpClient != null)
+        {
+            tcpClient.Close();
+        }
     }
 
 

@@ -12,20 +12,37 @@ public class StartMenuDisplay : MonoBehaviour
     public InputField inputField;
     public GameObject playersConnected;
     public GameObject display;
-    public GameStateHandler gameStateHandler;
+
+    GameStateHandler gameStateHandler;
 
     [SerializeField]
     private GameObject connectionHandlerObject;
     ConnectionHandler connectionHandler;
 
+    public bool isConnected = false;
+
     public void Awake(){
+        connectionHandlerObject = GameObject.Find("ConnectionHandler");
         connectionHandler = connectionHandlerObject.GetComponent<ConnectionHandler>();
+        gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
+        if (connectionHandler.tcpIPAddr.Length > 1)
+        {
+            isConnected = true;
+        }
     }
 
     public void Start()
     {
         playersConnected.SetActive(false);
 
+    }
+
+    public void Update()
+    {
+        if(isConnected)
+        {
+            ReturningFromGame();
+        }
     }
     public void ConnectToHost()
     {
@@ -65,4 +82,13 @@ public class StartMenuDisplay : MonoBehaviour
         inputField.gameObject.SetActive(true);
         playersConnected.SetActive(false);
     }
+
+    public void ReturningFromGame() {
+        inputField.gameObject.SetActive(false);
+        connectionText.text = $"Connected to host with IP {connectionHandler.tcpIPAddr} \n (Waiting for other players to connect)";
+        connectionText.text += $"\n\n Your tag is {gameStateHandler.myPlayerTag}";
+        playersConnected.SetActive(true);
+        isConnected = false;
+
+    } 
 }

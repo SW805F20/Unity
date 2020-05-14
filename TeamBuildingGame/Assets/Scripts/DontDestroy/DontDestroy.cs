@@ -7,5 +7,9 @@ public class DontDestroy : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+        if (FindObjectsOfType(GetType()).Length > 2)
+        {
+            Destroy(gameObject);
+        }
     }
 }
