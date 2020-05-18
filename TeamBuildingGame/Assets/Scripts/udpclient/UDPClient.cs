@@ -23,8 +23,13 @@ public class UDPClient : MonoBehaviour
         // Get the game state handler for global variables.
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
 
-        gameStateHandler.playerPositions = new Vector2[gameStateHandler.playerCount];
-        gameStateHandler.ballPosition = new Vector2();
+        gameStateHandler.prevPlayerPositions = new Vector3[gameStateHandler.playerCount];
+        gameStateHandler.newPlayerPositions = new Vector3[gameStateHandler.playerCount];
+        gameStateHandler.journeyLength = new float[gameStateHandler.playerCount];
+        gameStateHandler.timeAtLastUpdate = new float[gameStateHandler.playerCount];
+        gameStateHandler.playerSpeed = new float[gameStateHandler.playerCount];
+        gameStateHandler.prevBallPosition = new Vector3(0, 0, -7);
+        gameStateHandler.newBallPosition = new Vector3(0, 0, -7);
 
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
@@ -128,15 +133,19 @@ public class UDPClient : MonoBehaviour
         {
             if (id == 0)
             {
-                gameStateHandler.ballPosition.x = x;
-                gameStateHandler.ballPosition.y = y;
+                gameStateHandler.timeAtLastUpdateBall = Time.time;
+                gameStateHandler.prevBallPosition = gameStateHandler.newBallPosition;
+                gameStateHandler.newBallPosition = new Vector3(x, y, -7);
+                gameStateHandler.journeyLengthBall = Vector3.Distance(gameStateHandler.prevBallPosition, gameStateHandler.newBallPosition);
             }
             else
             {
                 // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
                 id--;
-                gameStateHandler.playerPositions[id].x = x;
-                gameStateHandler.playerPositions[id].y = y;
+                gameStateHandler.timeAtLastUpdate[id] = Time.time;
+                gameStateHandler.prevPlayerPositions[id] = gameStateHandler.newPlayerPositions[id];
+                gameStateHandler.newPlayerPositions[id] = new Vector3(x, y, -6);
+                gameStateHandler.journeyLength[id] = Vector3.Distance(gameStateHandler.prevPlayerPositions[id], gameStateHandler.newPlayerPositions[id]);
             }
         }
         

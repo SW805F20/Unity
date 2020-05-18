@@ -63,10 +63,29 @@ public class ObjectMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameStateHandler.ball.transform.localPosition = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, -6);
+        if(gameStateHandler.journeyLengthBall != 0)
+        {
+            // Distance moved equals elapsed time times speed
+            float distCoveredBall = (Time.time - gameStateHandler.timeAtLastUpdateBall) * gameStateHandler.ballSpeed;
+
+            // Fraction of journey completed equals current distance divided by total distance.
+            float fractionOfJourneyBall = distCoveredBall / gameStateHandler.journeyLengthBall;
+
+            // Set our position as a fraction of the distance between the markers.
+            gameStateHandler.ball.transform.localPosition = Vector3.Lerp(gameStateHandler.prevBallPosition, gameStateHandler.newBallPosition, fractionOfJourneyBall);
+        }
+
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
-            gameStateHandler.players[i].transform.localPosition = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, -6);
+            if(gameStateHandler.journeyLength[i] != 0)
+            {
+                float distCovered = (Time.time - gameStateHandler.timeAtLastUpdate[i]) * gameStateHandler.playerSpeed[i];
+
+                float fractionOfJourney = distCovered / gameStateHandler.journeyLength[i];
+
+                gameStateHandler.ball.transform.localPosition = Vector3.Lerp(gameStateHandler.prevPlayerPositions[i], gameStateHandler.newPlayerPositions[i], fractionOfJourney);
+            }
+
         }
     }
 }
