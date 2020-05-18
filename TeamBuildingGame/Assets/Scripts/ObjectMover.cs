@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
@@ -58,6 +59,14 @@ public class ObjectMover : MonoBehaviour
             }
 
         }
+
+        // Set the players speed for lerping
+        for (int i = 0; i < gameStateHandler.playerCount; i++)
+        {
+            gameStateHandler.playerSpeed[i] = 60.0f;
+        }
+        // Set ball speed
+        gameStateHandler.ballSpeed = 60.0f;
     }
 
     // Update is called once per frame
@@ -66,24 +75,26 @@ public class ObjectMover : MonoBehaviour
         if(gameStateHandler.journeyLengthBall != 0)
         {
             // Distance moved equals elapsed time times speed
-            float distCoveredBall = (Time.time - gameStateHandler.timeAtLastUpdateBall) * gameStateHandler.ballSpeed;
+            float distCoveredBall = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds * gameStateHandler.ballSpeed;
 
             // Fraction of journey completed equals current distance divided by total distance.
             float fractionOfJourneyBall = distCoveredBall / gameStateHandler.journeyLengthBall;
 
             // Set our position as a fraction of the distance between the markers.
-            gameStateHandler.ball.transform.localPosition = Vector3.Lerp(gameStateHandler.prevBallPosition, gameStateHandler.newBallPosition, fractionOfJourneyBall);
+            var vector2CoordinatesBall = Vector2.Lerp(gameStateHandler.prevBallPosition, gameStateHandler.newBallPosition, fractionOfJourneyBall);
+            gameStateHandler.ball.transform.localPosition = new Vector3(vector2CoordinatesBall.x, vector2CoordinatesBall.y, -7);
         }
 
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
             if(gameStateHandler.journeyLength[i] != 0)
             {
-                float distCovered = (Time.time - gameStateHandler.timeAtLastUpdate[i]) * gameStateHandler.playerSpeed[i];
+                float distCovered = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds * gameStateHandler.playerSpeed[i];
 
                 float fractionOfJourney = distCovered / gameStateHandler.journeyLength[i];
 
-                gameStateHandler.ball.transform.localPosition = Vector3.Lerp(gameStateHandler.prevPlayerPositions[i], gameStateHandler.newPlayerPositions[i], fractionOfJourney);
+                var vector2Coordinates = Vector2.Lerp(gameStateHandler.prevPlayerPositions[i], gameStateHandler.newPlayerPositions[i], fractionOfJourney);
+                gameStateHandler.players[i].transform.localPosition = new Vector3(vector2Coordinates.x, vector2Coordinates.y, -6);
             }
 
         }
