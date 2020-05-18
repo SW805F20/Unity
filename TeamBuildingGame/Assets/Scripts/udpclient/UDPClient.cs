@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
@@ -133,19 +133,23 @@ public class UDPClient : MonoBehaviour
         {
             if (id == 0)
             {
+                float timeSinceLastUpdateBall = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds;
                 gameStateHandler.timeAtLastUpdateBall = DateTime.UtcNow;
                 gameStateHandler.prevBallPosition = gameStateHandler.newBallPosition;
                 gameStateHandler.newBallPosition = new Vector2(x, y);
                 gameStateHandler.journeyLengthBall = Vector2.Distance(gameStateHandler.prevBallPosition, gameStateHandler.newBallPosition);
+                gameStateHandler.ballSpeed = gameStateHandler.journeyLengthBall / timeSinceLastUpdateBall;
             }
             else
             {
                 // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
                 id--;
+                float timeSinceLastUpdate = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdate[id]).TotalSeconds;
                 gameStateHandler.timeAtLastUpdate[id] = DateTime.UtcNow;
                 gameStateHandler.prevPlayerPositions[id] = gameStateHandler.newPlayerPositions[id];
                 gameStateHandler.newPlayerPositions[id] = new Vector2(x, y);
                 gameStateHandler.journeyLength[id] = Vector2.Distance(gameStateHandler.prevPlayerPositions[id], gameStateHandler.newPlayerPositions[id]);
+                gameStateHandler.playerSpeed[id] = gameStateHandler.journeyLength[id] / timeSinceLastUpdate;
             }
         }
         

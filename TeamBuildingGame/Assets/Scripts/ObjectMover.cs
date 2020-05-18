@@ -89,7 +89,7 @@ public class ObjectMover : MonoBehaviour
         {
             if(gameStateHandler.journeyLength[i] != 0)
             {
-                float distCovered = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds * gameStateHandler.playerSpeed[i];
+                float distCovered = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdate[i]).TotalSeconds * gameStateHandler.playerSpeed[i];
 
                 float fractionOfJourney = distCovered / gameStateHandler.journeyLength[i];
 
