@@ -25,8 +25,8 @@ public class UDPClient : MonoBehaviour
 
         gameStateHandler.prevPlayerPositions = new Vector2[gameStateHandler.playerCount];
         gameStateHandler.newPlayerPositions = new Vector2[gameStateHandler.playerCount];
-        gameStateHandler.journeyLength = new float[gameStateHandler.playerCount];
-        gameStateHandler.timeAtLastUpdate = new DateTime[gameStateHandler.playerCount];
+        gameStateHandler.journeyLengthPlayers = new float[gameStateHandler.playerCount];
+        gameStateHandler.timeAtLastUpdatePlayers = new DateTime[gameStateHandler.playerCount];
         gameStateHandler.playerSpeed = new float[gameStateHandler.playerCount];
         gameStateHandler.prevBallPosition = new Vector2(0, 0);
         gameStateHandler.newBallPosition = new Vector2(0, 0);
@@ -146,12 +146,12 @@ public class UDPClient : MonoBehaviour
             {
                 // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
                 id--;
-                float timeSinceLastUpdate = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdate[id]).TotalSeconds;
-                gameStateHandler.timeAtLastUpdate[id] = DateTime.UtcNow;
+                float timeSinceLastUpdate = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdatePlayers[id]).TotalSeconds;
+                gameStateHandler.timeAtLastUpdatePlayers[id] = DateTime.UtcNow;
                 gameStateHandler.prevPlayerPositions[id] = gameStateHandler.newPlayerPositions[id];
                 gameStateHandler.newPlayerPositions[id] = new Vector2(x, y);
-                gameStateHandler.journeyLength[id] = Vector2.Distance(gameStateHandler.prevPlayerPositions[id], gameStateHandler.newPlayerPositions[id]);
-                gameStateHandler.playerSpeed[id] = gameStateHandler.journeyLength[id] / timeSinceLastUpdate;
+                gameStateHandler.journeyLengthPlayers[id] = Vector2.Distance(gameStateHandler.prevPlayerPositions[id], gameStateHandler.newPlayerPositions[id]);
+                gameStateHandler.playerSpeed[id] = gameStateHandler.journeyLengthPlayers[id] / timeSinceLastUpdate;
             }
         }
         

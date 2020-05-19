@@ -78,11 +78,11 @@ public class ObjectMover : MonoBehaviour
 
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
-            if(gameStateHandler.journeyLength[i] != 0)
+            if(gameStateHandler.journeyLengthPlayers[i] != 0)
             {
-                float distCovered = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdate[i]).TotalSeconds * gameStateHandler.playerSpeed[i];
+                float distCovered = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdatePlayers[i]).TotalSeconds * gameStateHandler.playerSpeed[i];
 
-                float fractionOfJourney = distCovered / gameStateHandler.journeyLength[i];
+                float fractionOfJourney = distCovered / gameStateHandler.journeyLengthPlayers[i];
 
                 var vector2Coordinates = Vector2.Lerp(gameStateHandler.prevPlayerPositions[i], gameStateHandler.newPlayerPositions[i], fractionOfJourney);
                 gameStateHandler.players[i].transform.localPosition = new Vector3(vector2Coordinates.x, vector2Coordinates.y, -6);

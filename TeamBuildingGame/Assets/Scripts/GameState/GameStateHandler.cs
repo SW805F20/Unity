@@ -10,9 +10,9 @@ public class GameStateHandler : MonoBehaviour
     public int teamCount = 2;
     public Vector2[] prevPlayerPositions;
     public Vector2[] newPlayerPositions;
-    public float[] journeyLength;
+    public float[] journeyLengthPlayers;
     public float journeyLengthBall;
-    public DateTime[] timeAtLastUpdate;
+    public DateTime[] timeAtLastUpdatePlayers;
     public DateTime timeAtLastUpdateBall;
     public Vector3 anchor1, anchor2, anchor3, anchor4;
     public Vector2 prevBallPosition;
