@@ -66,7 +66,8 @@ public class ObjectMover : MonoBehaviour
         if(gameStateHandler.journeyLengthBall != 0)
         {
             // Distance moved equals elapsed time times speed
-            float distCoveredBall = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds * gameStateHandler.ballSpeed;
+            float totalTimeSinceLastUpdate = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds;
+            float distCoveredBall = totalTimeSinceLastUpdate  * gameStateHandler.ballSpeed;
 
             // Fraction of journey completed equals current distance divided by total distance.
             float fractionOfJourneyBall = distCoveredBall / gameStateHandler.journeyLengthBall;
