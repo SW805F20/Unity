@@ -105,7 +105,9 @@ public class UDPClient : MonoBehaviour
                 case 0:
                     UpdatePlayerData(data);
                     break;
-
+                default:
+                    Debug.LogError("This type of message is not handled on UDP");
+                    break;
             }
         }
         else

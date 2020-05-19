@@ -57,16 +57,7 @@ public class ObjectMover : MonoBehaviour
             {
                 player.GetComponent<SpriteRenderer>().color = Color.white;
             }
-
         }
-
-        // Set the players speed for lerping
-        for (int i = 0; i < gameStateHandler.playerCount; i++)
-        {
-            gameStateHandler.playerSpeed[i] = 60.0f;
-        }
-        // Set ball speed
-        gameStateHandler.ballSpeed = 60.0f;
     }
 
     // Update is called once per frame

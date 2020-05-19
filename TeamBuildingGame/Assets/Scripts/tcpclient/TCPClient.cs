@@ -140,6 +140,9 @@ public class TCPClient : MonoBehaviour
                 case 7:
                     StartCoroutine("HandleGameEnd");
                     break;
+                default:
+                    Debug.LogError("This type of message is not handled with TCP");
+                    break;
             }
         }
         else
