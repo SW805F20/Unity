@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
@@ -56,17 +57,39 @@ public class ObjectMover : MonoBehaviour
             {
                 player.GetComponent<SpriteRenderer>().color = Color.white;
             }
-
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        gameStateHandler.ball.transform.localPosition = new Vector3(gameStateHandler.ballPosition.x, gameStateHandler.ballPosition.y, -6);
+        if(gameStateHandler.journeyLengthBall != 0)
+        {
+            // Distance moved equals elapsed time times speed
+            float totalTimeSinceLastUpdate = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds;
+            float distCoveredBall = totalTimeSinceLastUpdate  * gameStateHandler.ballSpeed;
+
+            // Fraction of journey completed equals current distance divided by total distance.
+            float fractionOfJourneyBall = distCoveredBall / gameStateHandler.journeyLengthBall;
+
+            // Set our position as a fraction of the distance between the markers.
+            var vector2CoordinatesBall = Vector2.Lerp(gameStateHandler.prevBallPosition, gameStateHandler.newBallPosition, fractionOfJourneyBall);
+            gameStateHandler.ball.transform.localPosition = new Vector3(vector2CoordinatesBall.x, vector2CoordinatesBall.y, -7);
+        }
+
         for (int i = 0; i < gameStateHandler.playerCount; i++)
         {
-            gameStateHandler.players[i].transform.localPosition = new Vector3(gameStateHandler.playerPositions[i].x, gameStateHandler.playerPositions[i].y, -6);
+            if(gameStateHandler.journeyLengthPlayers[i] != 0)
+            {
+                float totalTimeSinceLastUpdate = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdatePlayers[i]).TotalSeconds;
+                float distCovered = totalTimeSinceLastUpdate * gameStateHandler.playerSpeed[i];
+
+                float fractionOfJourney = distCovered / gameStateHandler.journeyLengthPlayers[i];
+
+                var vector2Coordinates = Vector2.Lerp(gameStateHandler.prevPlayerPositions[i], gameStateHandler.newPlayerPositions[i], fractionOfJourney);
+                gameStateHandler.players[i].transform.localPosition = new Vector3(vector2Coordinates.x, vector2Coordinates.y, -6);
+            }
+
         }
     }
 }
