@@ -130,8 +130,11 @@ public class UDPClient : MonoBehaviour
         ushort x = (ushort)(data >> 24);
         ushort y = (ushort)(data >> 40);
 
+        if (id > 4)
+            return;
 
-        if (CheckTimestamp(time))
+        //if (CheckTimestamp(time))
+        if (1 == 1)
         {
             if (id == 0)
             {
