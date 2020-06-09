@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
@@ -23,8 +23,13 @@ public class UDPClient : MonoBehaviour
         // Get the game state handler for global variables.
         gameStateHandler = GameObject.Find("GameState").GetComponent<GameStateHandler>();
 
-        gameStateHandler.playerPositions = new Vector2[gameStateHandler.playerCount];
-        gameStateHandler.ballPosition = new Vector2();
+        gameStateHandler.prevPlayerPositions = new Vector2[gameStateHandler.playerCount];
+        gameStateHandler.newPlayerPositions = new Vector2[gameStateHandler.playerCount];
+        gameStateHandler.journeyLengthPlayers = new float[gameStateHandler.playerCount];
+        gameStateHandler.timeAtLastUpdatePlayers = new DateTime[gameStateHandler.playerCount];
+        gameStateHandler.playerSpeed = new float[gameStateHandler.playerCount];
+        gameStateHandler.prevBallPosition = new Vector2(0, 0);
+        gameStateHandler.newBallPosition = new Vector2(0, 0);
 
         // Establishes a udp connection on the port.
         uClient = new UdpClient(portNumber);
@@ -100,7 +105,9 @@ public class UDPClient : MonoBehaviour
                 case 0:
                     UpdatePlayerData(data);
                     break;
-
+                default:
+                    Debug.LogError("This type of message is not handled on UDP");
+                    break;
             }
         }
         else
@@ -130,8 +137,26 @@ public class UDPClient : MonoBehaviour
 
         if (id == 0)
         {
-            gameStateHandler.ballPosition.x = x;
-            gameStateHandler.ballPosition.y = y;
+            if (id == 0)
+            {
+                float timeSinceLastUpdateBall = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdateBall).TotalSeconds;
+                gameStateHandler.timeAtLastUpdateBall = DateTime.UtcNow;
+                gameStateHandler.prevBallPosition = gameStateHandler.newBallPosition;
+                gameStateHandler.newBallPosition = new Vector2(x, y);
+                gameStateHandler.journeyLengthBall = Vector2.Distance(gameStateHandler.prevBallPosition, gameStateHandler.newBallPosition);
+                gameStateHandler.ballSpeed = gameStateHandler.journeyLengthBall / timeSinceLastUpdateBall;
+            }
+            else
+            {
+                // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
+                id--;
+                float timeSinceLastUpdate = (float)(DateTime.UtcNow - gameStateHandler.timeAtLastUpdatePlayers[id]).TotalSeconds;
+                gameStateHandler.timeAtLastUpdatePlayers[id] = DateTime.UtcNow;
+                gameStateHandler.prevPlayerPositions[id] = gameStateHandler.newPlayerPositions[id];
+                gameStateHandler.newPlayerPositions[id] = new Vector2(x, y);
+                gameStateHandler.journeyLengthPlayers[id] = Vector2.Distance(gameStateHandler.prevPlayerPositions[id], gameStateHandler.newPlayerPositions[id]);
+                gameStateHandler.playerSpeed[id] = gameStateHandler.journeyLengthPlayers[id] / timeSinceLastUpdate;
+            }
         }
         else
         {
