@@ -123,23 +123,23 @@ public class UDPClient : MonoBehaviour
         ushort x = (ushort)(data >> 24);
         ushort y = (ushort)(data >> 40);
 
-
-        if (CheckTimestamp(time))
-        {
-            if (id == 0)
-            {
-                gameStateHandler.ballPosition.x = x;
-                gameStateHandler.ballPosition.y = y;
-            }
-            else
-            {
-                // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
-                id--;
-                gameStateHandler.playerPositions[id].x = x;
-                gameStateHandler.playerPositions[id].y = y;
-            }
+        System.IO.StreamWriter writer = new System.IO.StreamWriter(Application.persistentDataPath + "/ulog.txt", true);
+        using(writer){
+            writer.WriteLine(DateTime.Now + ";" + time + ";" + id + ";" + x + ";" + y + "\n");
         }
-        
+
+        if (id == 0)
+        {
+            gameStateHandler.ballPosition.x = x;
+            gameStateHandler.ballPosition.y = y;
+        }
+        else
+        {
+            // Player id starts at 1 while the playerposition array is 0 indexed. Decrementing id so that they line up.
+            id--;
+            gameStateHandler.playerPositions[id].x = x;
+            gameStateHandler.playerPositions[id].y = y;
+        }
     }
 
     /// <summary>
